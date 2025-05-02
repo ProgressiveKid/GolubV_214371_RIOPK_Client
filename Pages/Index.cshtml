@@ -7,4 +7,25 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+    <button id="fetchMessageBtn">Fetch Message</button>
+    <p id="message"></p>
 </div>
+
+@section Scripts {
+    <script>
+        document.getElementById("fetchMessageBtn").addEventListener("click", function() {
+            // Выполняем HTTP запрос
+            fetch('https://localhost:7248/api/Api/hello')
+                .then(response => response.json())
+                .then(data => {
+                    // Выводим ответ на экран
+                    document.getElementById("message").textContent = data.message;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById("message").textContent = 'Failed to fetch data.';
+                });
+        });
+    </script>
+}

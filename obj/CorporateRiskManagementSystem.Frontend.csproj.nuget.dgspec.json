@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystemBack\\CorporateRiskManagementSystem.Frontend\\CorporateRiskManagementSystem.Frontend.csproj": {}
+    "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\CorporateRiskManagementSystem.Frontend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystemBack\\CorporateRiskManagementSystem.Frontend\\CorporateRiskManagementSystem.Frontend.csproj": {
+    "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\CorporateRiskManagementSystem.Frontend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystemBack\\CorporateRiskManagementSystem.Frontend\\CorporateRiskManagementSystem.Frontend.csproj",
+        "projectUniqueName": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\CorporateRiskManagementSystem.Frontend.csproj",
         "projectName": "CorporateRiskManagementSystem.Frontend",
-        "projectPath": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystemBack\\CorporateRiskManagementSystem.Frontend\\CorporateRiskManagementSystem.Frontend.csproj",
+        "projectPath": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\CorporateRiskManagementSystem.Frontend.csproj",
         "packagesPath": "C:\\Users\\vgolub\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystemBack\\CorporateRiskManagementSystem.Frontend\\obj\\",
+        "outputPath": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\vgolub\\AppData\\Roaming\\NuGet\\NuGet.Config",
