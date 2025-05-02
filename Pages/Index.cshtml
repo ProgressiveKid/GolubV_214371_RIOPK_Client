@@ -16,7 +16,7 @@
     <script>
         document.getElementById("fetchMessageBtn").addEventListener("click", function() {
             // Выполняем HTTP запрос
-            fetch('https://localhost:7248/api/Api/hello')
+            fetch('https://localhost:7248/Risk/GetAllRisks')
                 .then(response => response.json())
                 .then(data => {
                     // Выводим ответ на экран
