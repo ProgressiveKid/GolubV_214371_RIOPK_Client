@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - CorporateRiskManagementSystem.Frontend</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="icon" type="image/png" sizes="32x32" href="images/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/icon/favicon-16x16.png">
+
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CorporateRiskManagementSystem.Frontend.styles.css" asp-append-version="true" />
 </head>
@@ -12,20 +15,69 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">CorporateRiskManagementSystem.Frontend</a>
+                <a class="navbar-brand" asp-area="" asp-page="/Index">CorporateRiskManagementSystem (CRMS)</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                @if (User.IsInRole("Administrator"))
+                {
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Index">Поколдовать над пользователями</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Изменить кому роль?</a>
+                            </li>
+                        </ul>
+                    </div>
+                }
+                @if (User.IsInRole("Auditor"))
+                {
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Index">Создать риск</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Сформировать отчет</a>
+                            </li>
+                        </ul>
+                    </div>
+                }
+                @if (User.IsInRole("Director"))
+                {
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Index">Просмотреть отчеты Аудитора</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Уволить отдел/сотрудника</a>
+                            </li>
+                        </ul>
+                    </div>
+                }
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Создать риск</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Сформировать отчет</a>
                         </li>
                     </ul>
+                    <div class="form-group">
+                        <label for="departmentDropdown">Выберите отдел:</label>
+                        <select id="departmentDropdown" class="form-control">
+                            <option>Загрузка...</option>
+                        </select>
+                        <a class="nav-link text-black" asp-area="" asp-controller="Account" asp-action="UserOffice">
+                            Личный кабинет
+                            @* <img src="/images/icon/user.png" alt="Пользователь"> *@
+                        </a>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -45,6 +97,46 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Вызов API для получения списка отделов
+            $.ajax({
+                url: 'https://localhost:7248/Department/OnGetDepartmentsAsync',  // Путь к вашему методу в контроллере
+                type: 'GET',
+                success: function (data) {
+                    $('#departmentDropdown').empty();  // Очистка старых данных
+                    if (data.length > 0) {
+                        // Добавляем отделы в выпадающий список
+                        $.each(data, function (index, department) {
+                            $('#departmentDropdown').append(
+                                `<option value="${department.departmentId}">${department.name}</option>`
+                            );
+                        });
+
+                        // Восстановление выбранного значения из LocalStorage, если оно существует
+                        var selectedDepartment = localStorage.getItem('selectedDepartment');
+                        if (selectedDepartment) {
+                            $('#departmentDropdown').val(selectedDepartment);
+                        }
+                    } else {
+                        $('#departmentDropdown').append('<option>Нет отделов</option>');
+                    }
+                },
+                error: function () {
+                    $('#departmentDropdown').empty();
+                    $('#departmentDropdown').append('<option>Ошибка загрузки</option>');
+                }
+            });
+
+            // Сохраняем выбранный элемент в LocalStorage при изменении
+            $('#departmentDropdown').change(function () {
+                var selectedValue = $(this).val();
+                localStorage.setItem('selectedDepartment', selectedValue);  // Сохраняем ID выбранного отдела
+            });
+        });
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
