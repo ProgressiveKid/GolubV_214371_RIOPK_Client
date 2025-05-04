@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -12,8 +13,14 @@ public class IndexModel : PageModel
         _logger = logger;
     }
 
-    public void OnGet()
+    public IActionResult OnGet()
     {
+        var cookieValue = Request.Cookies["CRMSAuth"];
+        if (!User.Identity.IsAuthenticated)
+        {
+            return RedirectToPage("/AuthPages/Autorisation");
+        }
 
+        return Page();
     }
 }

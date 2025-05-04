@@ -1,0 +1,96 @@
+﻿@page
+@model CorporateRiskManagementSystemBack.ViewModels.LoginViewModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Вход</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .btn-login {
+            margin-top: 20px;
+        }
+
+        .form-control.is-invalid {
+            border-color: #dc3545;
+        }
+
+        .button-container {
+            display: grid;
+            grid-template-columns: repeat(2, auto);
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6">
+                <h2 class="text-center mb-4">
+                    <img src="/images/icon/android-chrome-512x512.png" alt="Icon" style="width: 50px;" />
+                    Авторизация
+                </h2>
+                <img src="/gif/man-chill.gif" alt="GIF" style="width: 50px;" />
+                <form id="loginForm" method="post" class="needs-validation" novalidate autocomplete="off">
+                    @Html.AntiForgeryToken()
+                    <div class="validation" asp-validation-summary="ModelOnly"></div>
+                    <div class="form-group">
+                        <label for="Email">Почта пользователя:</label>
+                        <input id="Email" type="text" class="form-control" placeholder="example@mail.com" required />
+                        <div class="invalid-feedback">Пожалуйста, введите имя пользователя.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Password">Пароль:</label>
+                        <input id="Password" type="password" class="form-control" placeholder="пароль" required />
+                        <div class="invalid-feedback">Пожалуйста, введите пароль.</div>
+                    </div>
+                    <div class="button-container">
+                        <button id="loginButton" type="submit" class="btn btn-primary btn-login btn-block">Войти</button>
+                        <a href="/AuthPages/Registration" class="btn btn-success btn-login btn-block">Зарегистрироваться</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const email = document.getElementById('Email').value;
+            const password = document.getElementById('Password').value;
+            const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+            const token = tokenInput ? tokenInput.value : '';
+
+            const response = await fetch('https://localhost:7100/Auth/Autorisation', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': token
+                },
+                body: JSON.stringify({
+                    Email: email,
+                    Password: password
+                })
+            });
+
+            if (!response.ok) {
+                alert("Ошибка на сервере: " + response.status);
+                return;
+            }
+
+            const result = await response.json();
+            if (result.success) {
+                window.location.href = result.redirectUrl;
+            } else {
+                alert(result.message || "Ошибка при авторизации");
+            }
+        });
+    </script>
+</body>
+</html>

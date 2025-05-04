@@ -1,11 +1,23 @@
 {
   "Version": 1,
-  "Hash": "InyL8ITMIL59RcLKzNhZMlgS+hsQcgvcsMgeNzHN4rM=",
+  "Hash": "rlhIE6ImnI6BBF/9BJPEnOm5NKS3MFQfOxZnv4fo+E0=",
   "Source": "CorporateRiskManagementSystem.Frontend",
   "BasePath": "_content/CorporateRiskManagementSystem.Frontend",
   "Mode": "Default",
   "ManifestType": "Build",
-  "ReferencedProjectsConfiguration": [],
+  "ReferencedProjectsConfiguration": [
+    {
+      "Identity": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystemBack\\CorporateRiskManagementSystemBack\\CorporateRiskManagementSystemBack.csproj",
+      "Version": 2,
+      "Source": "CorporateRiskManagementSystemBack",
+      "GetPublishAssetsTargets": "ComputeReferencedStaticWebAssetsPublishManifest;GetCurrentProjectPublishStaticWebAssetItems",
+      "AdditionalPublishProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalPublishPropertiesToRemove": "WebPublishProfileFile;TargetFramework",
+      "GetBuildAssetsTargets": "GetCurrentProjectBuildStaticWebAssetItems",
+      "AdditionalBuildProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalBuildPropertiesToRemove": "WebPublishProfileFile;TargetFramework"
+    }
+  ],
   "DiscoveryPatterns": [
     {
       "Name": "CorporateRiskManagementSystem.Frontend\\wwwroot",

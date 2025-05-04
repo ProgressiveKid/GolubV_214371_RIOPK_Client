@@ -1,31 +1,106 @@
 ﻿@page
+@using Microsoft.AspNetCore.Identity
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<form id="createRiskForm">
+    <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" id="title" class="form-control" required />
+    </div>
 
-    <button id="fetchMessageBtn">Fetch Message</button>
-    <p id="message"></p>
-</div>
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea id="description" class="form-control" required></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label for="severity" class="form-label">Severity</label>
+        <select id="severity" class="form-select" required>
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="likelihood" class="form-label">Likelihood</label>
+        <select id="likelihood" class="form-select" required>
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
 
 @section Scripts {
     <script>
-        document.getElementById("fetchMessageBtn").addEventListener("click", function() {
-            // Выполняем HTTP запрос
-            fetch('https://localhost:7248/Risk/GetAllRisks')
-                .then(response => response.json())
-                .then(data => {
-                    // Выводим ответ на экран
-                    document.getElementById("message").textContent = data.message;
+        $(document).ready(function () {
+            // Загружаем список департаментов при загрузке страницы
+            $.ajax({
+                url: 'https://localhost:7248/Department/OnGetDepartmentsAsync',  // Путь к методу контроллера
+                type: 'GET',
+                success: function (data) {
+                    $('#departmentDropdown').empty();  // Очистка старых данных
+                    if (data.length > 0) {
+                        // Добавляем департаменты в выпадающий список
+                        $.each(data, function (index, department) {
+                            $('#departmentDropdown').append(
+                                `<option value="${department.departmentId}">${department.name}</option>`
+                            );
+                        });
+                    } else {
+                        $('#departmentDropdown').append('<option>Нет отделов</option>');
+                    }
+                },
+                error: function () {
+                    $('#departmentDropdown').empty();
+                    $('#departmentDropdown').append('<option>Ошибка загрузки</option>');
+                }
+            });
+
+            // Обработчик отправки формы
+            $("#createRiskForm").on("submit", function (event) {
+                event.preventDefault();
+
+                const data = {
+                    title: $("#title").val(),
+                    description: $("#description").val(),
+                    severity: $("#severity").val(),
+                    likelihood: $("#likelihood").val(),
+                    departmentId: $("#departmentDropdown").val()  // Получаем выбранный ID департамента
+                };
+                console.log(data);
+                // Отправка данных на сервер с использованием fetch
+                fetch('https://localhost:7248/Risk/CreateRisk', {
+                    method: 'POST',
+                    credentials: 'include', // для использования с куки
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                    document.getElementById("message").textContent = 'Failed to fetch data.';
-                });
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Ошибка при создании риска');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Риск успешно создан:', data);
+                        // Можно перенаправить на страницу списка рисков
+                       
+                    })
+                    .catch(error => {
+                        console.error('Ошибка:', error);
+                    });
+            });
         });
     </script>
+
+    @Html.AntiForgeryToken()
 }

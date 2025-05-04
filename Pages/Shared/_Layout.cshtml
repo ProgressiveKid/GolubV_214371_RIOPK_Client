@@ -44,6 +44,16 @@
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Сформировать отчет</a>
                             </li>
                         </ul>
+                        <div class="form-group">
+                            <label for="departmentDropdown">Выберите отдел:</label>
+                            <select id="departmentDropdown" class="form-control">
+                                <option>Загрузка...</option>
+                            </select>
+                            <a class="nav-link text-black" asp-area="" asp-controller="Account" asp-action="UserOffice">
+                                Личный кабинет
+                                @* <img src="/images/icon/user.png" alt="Пользователь"> *@
+                            </a>
+                        </div>
                     </div>
                 }
                 @if (User.IsInRole("Director"))
@@ -59,26 +69,6 @@
                         </ul>
                     </div>
                 }
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Создать риск</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Сформировать отчет</a>
-                        </li>
-                    </ul>
-                    <div class="form-group">
-                        <label for="departmentDropdown">Выберите отдел:</label>
-                        <select id="departmentDropdown" class="form-control">
-                            <option>Загрузка...</option>
-                        </select>
-                        <a class="nav-link text-black" asp-area="" asp-controller="Account" asp-action="UserOffice">
-                            Личный кабинет
-                            @* <img src="/images/icon/user.png" alt="Пользователь"> *@
-                        </a>
-                    </div>
-                </div>
             </div>
         </nav>
     </header>
