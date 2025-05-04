@@ -20,7 +20,7 @@ public class IndexModel : PageModel
         {
             return RedirectToPage("/AuthPages/Autorisation");
         }
-
+        ViewData["username"] = User.Identity.Name;
         return Page();
     }
 }

@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CorporateRiskManagementSystemBack.Controllers;
+using System.Net.Http;
+using System.Text;
+using Newtonsoft.Json;
 
 namespace CorporateRiskManagementSystem.Frontend.Pages.Controllers
 {
@@ -16,9 +19,11 @@ namespace CorporateRiskManagementSystem.Frontend.Pages.Controllers
     public class AuthController : Controller
     {
         RiskDbContext db;
-        public AuthController(RiskDbContext context)
+        private readonly HttpClient _httpClient;
+        public AuthController(RiskDbContext context, HttpClient httpClient)
         {
             db = context;
+            _httpClient = httpClient;
         }
 
         [HttpGet("Autorisation")]
@@ -26,15 +31,11 @@ namespace CorporateRiskManagementSystem.Frontend.Pages.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                // Ваш код, который будет выполнен, если пользователь авторизован
-                //var rooms = await db.Rooms.ToListAsync();
                 return View();
             }
             else
             {
-                // Ваш код, который будет выполнен, если пользователь не авторизован
                 return View("Autorisation");
-                // Пример перенаправления на страницу входа
             }
         }
 
@@ -49,24 +50,19 @@ namespace CorporateRiskManagementSystem.Frontend.Pages.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Ищем пользователя по email и паролю
                 User user = await db.Users.FirstOrDefaultAsync(u => u.Email == model.Email && u.PasswordHash == model.Password);
                 if (user != null)
                 {
                     Role curRole = Enum.Parse<Role>(user.Role);
-                    // Здесь нужно будет выполнить аутентификацию, например, создать сессию или токен JWT
                     await Authenticate(model.Email, curRole);
-                    // Ответ в формате JSON
                     return Json(new { success = true, redirectUrl = "https://localhost:7100" });
                 }
                 else
                 {
-                    // Если пользователь не найден, отправляем ошибку
                     return Json(new { success = false, message = "Некорректные логин и(или) пароль" });
                 }
             }
 
-            // Если модель невалидна
             return Json(new { success = false, message = "Неверные данные" });
         }
 
@@ -128,10 +124,10 @@ namespace CorporateRiskManagementSystem.Frontend.Pages.Controllers
         private async Task Authenticate(string userName, Role role)
         {
             var claims = new List<Claim>
-    {
-        new Claim(ClaimsIdentity.DefaultNameClaimType, userName),
-        new Claim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", role.ToString())
-    };
+            {
+                new Claim(ClaimsIdentity.DefaultNameClaimType, userName),
+                new Claim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", role.ToString())
+            };
 
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
 

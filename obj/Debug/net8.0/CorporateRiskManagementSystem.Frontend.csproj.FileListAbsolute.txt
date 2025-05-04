@@ -58,3 +58,4 @@ C:\Users\vgolub\source\repos\CorporateRiskManagementSystem.Frontend\bin\Debug\ne
 C:\Users\vgolub\source\repos\CorporateRiskManagementSystem.Frontend\obj\Debug\net8.0\Corporat.B8E4F527.Up2Date
 C:\Users\vgolub\source\repos\CorporateRiskManagementSystem.Frontend\bin\Debug\net8.0\Humanizer.dll
 C:\Users\vgolub\source\repos\CorporateRiskManagementSystem.Frontend\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Design.dll
+C:\Users\vgolub\source\repos\CorporateRiskManagementSystem.Frontend\bin\Debug\net8.0\Newtonsoft.Json.dll

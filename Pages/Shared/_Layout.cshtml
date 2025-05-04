@@ -41,6 +41,12 @@
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Index">Создать риск</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/AuditorPages/RiskPage">Риски отдела</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Оценка рисков</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Сформировать отчет</a>
                             </li>
                         </ul>
@@ -88,7 +94,8 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/js/swal-support.js"></script>
     <script>
         $(document).ready(function () {
             // Вызов API для получения списка отделов

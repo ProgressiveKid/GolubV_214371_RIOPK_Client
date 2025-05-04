@@ -3,6 +3,7 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
+    string username = ViewData["username"] as string;
 }
 
 <form id="createRiskForm">
@@ -72,7 +73,8 @@
                     description: $("#description").val(),
                     severity: $("#severity").val(),
                     likelihood: $("#likelihood").val(),
-                    departmentId: $("#departmentDropdown").val()  // Получаем выбранный ID департамента
+                    departmentId: $("#departmentDropdown").val(),  // Получаем выбранный ID департамента
+                    usernameId: "@ViewData["username"].ToString()"
                 };
                 console.log(data);
                 // Отправка данных на сервер с использованием fetch
@@ -84,20 +86,26 @@
                     },
                     body: JSON.stringify(data)
                 })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Ошибка при создании риска');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('Риск успешно создан:', data);
-                        // Можно перенаправить на страницу списка рисков
-                       
-                    })
-                    .catch(error => {
-                        console.error('Ошибка:', error);
-                    });
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Ошибка при создании риска');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                        Swal.fire({
+                            title: 'Готово!',
+                            text: 'Риск успешно создан',
+                            icon: 'success',
+                            confirmButtonText: 'ОК'
+                        }).then(() => {
+                            location.reload(); // перезагрузка страницы после закрытия alert 
+                        });
+                   
+                })
+                .catch(error => {
+                    console.error('Ошибка:', error);
+                });
             });
         });
     </script>

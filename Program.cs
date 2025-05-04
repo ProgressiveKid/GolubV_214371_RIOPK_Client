@@ -14,16 +14,17 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowLocalhost", policy =>
     {
-        policy.WithOrigins("https://localhost:7100") // URL фронтенда
+        policy.AllowAnyOrigin()
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials(); // Для разрешения передачи куки
     });
 });
-
+builder.Services.AddHttpClient();  // Регистрируем HttpClient для DI
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
+        options.Cookie.Name = "AuthCookie"; // одинаковое имя
         options.Cookie.SameSite = SameSiteMode.None; // SameSite политики, чтобы куки работали в разных приложениях
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         options.Cookie.Path = "/";

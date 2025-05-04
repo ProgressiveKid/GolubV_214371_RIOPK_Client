@@ -1,4 +1,77 @@
 ﻿@page
 @model CorporateRiskManagementSystem.Frontend.Pages.AuditorPages.RiskPageModel
 @{
+    ViewData["Title"] = "Риски департамента";
+}
+<h2>Риски департамента</h2>
+
+<div id="risks-container">
+    <p>Загрузка рисков...</p>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Загрузка департаментов
+            $.ajax({
+                url: 'https://localhost:7248/Department/OnGetDepartmentsAsync',
+                type: 'GET',
+                success: function (data) {
+                    const dropdown = $('#departmentDropdown');
+                    dropdown.empty();
+
+                    if (data.length === 0) {
+                        dropdown.append('<option>Нет отделов</option>');
+                        return;
+                    }
+
+                    $.each(data, function (index, department) {
+                        dropdown.append(`<option value="${department.departmentId}">${department.name}</option>`);
+                    });
+                    // При выборе департамента загружаем риски
+                    $('#departmentDropdown').on('change', function () {
+                        const departmentId = $(this).val();
+
+                        if (!departmentId) {
+                            Swal.fire('Ошибка', 'Пожалуйста, выберите департамент.', 'warning');
+                            return;
+                        }
+                        console.log("Department ID: ", departmentId);
+                        fetch(`https://localhost:7248/Risk/GetRisksForDepartment?departmentId=${departmentId}`, {
+                            method: 'GET'
+                        })
+                            .then(response => {
+                                if (!response.ok) throw new Error('Ошибка при получении рисков');
+                                return response.json();
+                            })
+                            .then(data => {
+                                const container = $('#risks-container');
+                                if (!data || data.length === 0) {
+                                    container.html('<p>Риски не найдены для данного департамента.</p>');
+                                    return;
+                                }
+
+                                let html = '<ul>';
+                                data.forEach(risk => {
+                                    html += `<li><strong>${risk.name}</strong> — Уровень: ${risk.level}</li>`;
+                                });
+                                html += '</ul>';
+                                container.html(html);
+                            })
+                            .catch(error => {
+                                Swal.fire('Ошибка', error.message, 'error');
+                            });
+                    });
+                },
+                error: function () {
+                    Swal.fire('Ошибка', 'Не удалось загрузить департаменты.', 'error');
+                }
+            });
+
+           
+        });
+    </script>
 }
