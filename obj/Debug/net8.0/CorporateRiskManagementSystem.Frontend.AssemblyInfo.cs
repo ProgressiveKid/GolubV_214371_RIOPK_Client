@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CorporateRiskManagementSystem.Frontend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5e7232576f0674f6a6e42370101451e405cc00c1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9ef5f6d3c8a2cdfbcd77d2f387601944f071cfaa")]
 [assembly: System.Reflection.AssemblyProductAttribute("CorporateRiskManagementSystem.Frontend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CorporateRiskManagementSystem.Frontend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
