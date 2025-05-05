@@ -203,7 +203,13 @@
             contentType: 'application/json',
             data: JSON.stringify(data),
             success: function () {
-                Swal.fire('Успех', isEditMode ? 'Оценка обновлена.' : 'Оценка добавлена.', 'success');
+                Swal.fire('Успех', isEditMode ? 'Оценка обновлена.' : 'Оценка добавлена.', 'success')
+                  .then((result) => {
+                    if (result.isConfirmed) {
+                      // Перезагружаем страницу после подтверждения
+                      location.reload();
+                    }
+                  });
                 $('#back-button').click();
                 const departmentId = $('#departmentDropdown').val();
                 isEditMode = false;
