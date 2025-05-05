@@ -44,7 +44,12 @@
                                 <a class="nav-link text-dark" asp-area="" asp-page="/AuditorPages/RiskPage">Риски отдела</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Оценка рисков</a>
+                                <a class="nav-link text-dark d-flex align-items-center gap-2" asp-area="" asp-page="/AuditorPages/RiskAssessmentPage">
+                                    <span id="riskBadge" class="badge rounded-pill bg-danger d-none">
+                                        0
+                                    </span>
+                                    Оценка рисков
+                                </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Сформировать отчет</a>
@@ -100,23 +105,39 @@
         $(document).ready(function () {
             // Вызов API для получения списка отделов
             $.ajax({
-                url: 'https://localhost:7248/Department/OnGetDepartmentsAsync',  // Путь к вашему методу в контроллере
+                url: 'https://localhost:7248/Department/OnGetDepartmentsAsync',
                 type: 'GET',
                 success: function (data) {
-                    $('#departmentDropdown').empty();  // Очистка старых данных
+                    $('#departmentDropdown').empty();
+
                     if (data.length > 0) {
-                        // Добавляем отделы в выпадающий список
                         $.each(data, function (index, department) {
                             $('#departmentDropdown').append(
                                 `<option value="${department.departmentId}">${department.name}</option>`
                             );
                         });
 
-                        // Восстановление выбранного значения из LocalStorage, если оно существует
                         var selectedDepartment = localStorage.getItem('selectedDepartment');
+
                         if (selectedDepartment) {
                             $('#departmentDropdown').val(selectedDepartment);
+                        } else {
+                            // Если в LocalStorage нет — установить первый отдел
+                            selectedDepartment = data[0].departmentId;
+                            $('#departmentDropdown').val(selectedDepartment);
                         }
+
+                        // Вызов fetch с корректным departmentId
+                        fetch(`https://localhost:7248/Risk/CheckRisksAssessmentForDepartment?departmentId=${selectedDepartment}`)
+                            .then(response => response.json())
+                            .then(count => {
+                                const badge = document.getElementById('riskBadge');
+                                if (count > 0) {
+                                    badge.textContent = count;
+                                    badge.classList.remove('d-none');
+                                }
+                            })
+                            .catch(error => console.error('Ошибка при получении данных по рискам:', error));
                     } else {
                         $('#departmentDropdown').append('<option>Нет отделов</option>');
                     }
@@ -134,7 +155,9 @@
             });
         });
     </script>
+    <script>
 
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

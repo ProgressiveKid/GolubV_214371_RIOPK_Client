@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CorporateRiskManagementSystem.Frontend.Pages.AuditorPages
 {
-    public class RiskPageModel : PageModel
+    public class RiskAssessmentPage : PageModel
     {
         public IActionResult OnGet()
         {

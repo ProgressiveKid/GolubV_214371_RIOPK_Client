@@ -1,0 +1,218 @@
+﻿@page
+@model CorporateRiskManagementSystem.Frontend.Pages.AuditorPages.RiskAssessmentPage
+@{
+    ViewData["Title"] = "Риски департамента";
+    string usernameId = ViewData["username"] as string;
+
+}
+<h2>Риски департамента</h2>
+
+<div id="risks-container">
+</div>
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Уровень серьезности</th>
+            <th>Вероятность</th>
+            <th>Дата создания</th>
+            <th>Есть ли оценка риска</th>
+        </tr>
+    </thead>
+    <tbody id="risks-table-body">
+        <!-- Данные будут вставлены через JS -->
+    </tbody>
+</table>
+<div id="assessment-form-container" class="d-none mt-4">
+    <h4>Добавить оценку риска</h4>
+    <form id="assessment-form">
+        <input type="hidden" id="form-risk-id" />
+
+        <div class="mb-3">
+            <label for="impactScore" class="form-label">Оценка влияния</label>
+            <input type="number" class="form-control" id="impactScore" min="1" max="10" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="probabilityScore" class="form-label">Оценка вероятности</label>
+            <input type="number" class="form-control" id="probabilityScore" min="1" max="10" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="notes" class="form-label">Заметки</label>
+            <textarea class="form-control" id="notes" rows="3"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <button type="button" id="back-button" class="btn btn-secondary ms-2">Назад</button>
+    </form>
+</div>
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    let isEditMode = false;
+
+    $(document).ready(function () {
+        function loadDepartments() {
+            $.ajax({
+                url: 'https://localhost:7248/Department/OnGetDepartmentsAsync',
+                type: 'GET',
+                success: function (data) {
+                    const dropdown = $('#departmentDropdown');
+                    dropdown.empty();
+
+                    if (!data || data.length === 0) {
+                        dropdown.append('<option>Нет отделов</option>');
+                        return;
+                    }
+
+                    $.each(data, function (index, department) {
+                        dropdown.append(`<option value="${department.departmentId}">${department.name}</option>`);
+                    });
+
+                    const firstDepartmentId = data[0].departmentId;
+                    dropdown.val(firstDepartmentId);
+                    loadRisks(firstDepartmentId);
+                },
+                error: function () {
+                    Swal.fire('Ошибка', 'Не удалось загрузить департаменты.', 'error');
+                }
+            });
+        }
+
+        $('#departmentDropdown').on('change', function () {
+            const departmentId = $(this).val();
+            if (!departmentId) {
+                Swal.fire('Ошибка', 'Пожалуйста, выберите департамент.', 'warning');
+                return;
+            }
+            loadRisks(departmentId);
+        });
+
+        function loadRisks(departmentId) {
+            $.ajax({
+                url: `https://localhost:7248/Risk/GetRisksForDepartment`,
+                type: 'GET',
+                data: { departmentId },
+                success: function (data) {
+                    renderRiskTable(data);
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire('Ошибка', 'Ошибка при получении рисков: ' + error, 'error');
+                }
+            });
+        }
+
+        function renderRiskTable(data) {
+            const tbody = $('#risks-table-body');
+            tbody.empty();
+
+            if (!data || data.length === 0) {
+                tbody.append('<tr><td colspan="8" class="text-center">Нет рисков для отображения.</td></tr>');
+                return;
+            }
+
+            data.forEach(risk => {
+                const buttonLabel = risk.isHaveAssessment ? 'Редактировать оценку' : 'Добавить оценку';
+                const buttonClass = risk.isHaveAssessment ? 'btn-outline-primary' : 'btn-outline-success';
+
+                const row = `
+                    <tr>
+                        <td>${risk.riskId}</td>
+                        <td>${risk.title}</td>
+                        <td>${risk.description ?? '—'}</td>
+                        <td>${risk.severity}</td>
+                        <td>${risk.likelihood}</td>
+                        <td>${new Date(risk.createdAt).toLocaleDateString()}</td>
+                        <td>
+                            <button class="btn btn-sm ${buttonClass} add-assessment-btn" data-risk-id="${risk.riskId}" data-has-assessment="${risk.isHaveAssessment}">
+                                ${buttonLabel}
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tbody.append(row);
+            });
+
+            $('.add-assessment-btn').on('click', function () {
+                const riskId = $(this).data('risk-id');
+                const hasAssessment = $(this).data('has-assessment');
+                $('#form-risk-id').val(riskId);
+                $('table tbody tr').hide();
+                $(this).closest('tr').show();
+                $('#assessment-form-container').removeClass('d-none');
+
+                isEditMode = hasAssessment;
+
+                if (isEditMode) {
+                    $.ajax({
+                        url: `https://localhost:7248/Risk/GetAssessmentForRisk`,
+                        type: 'GET',
+                        data: { riskId },
+                        success: function (assessment) {
+                            $('#impactScore').val(assessment.impactScore);
+                            $('#probabilityScore').val(assessment.probabilityScore);
+                            $('#notes').val(assessment.notes);
+                        },
+                        error: function () {
+                            Swal.fire('Ошибка', 'Не удалось загрузить оценку.', 'error');
+                        }
+                    });
+                } else {
+                    $('#impactScore').val('');
+                    $('#probabilityScore').val('');
+                    $('#notes').val('');
+                }
+            });
+
+            $('#back-button').on('click', function () {
+                $('#assessment-form-container').addClass('d-none');
+                $('table tbody tr').show();
+            });
+        }
+
+        loadDepartments();
+    });
+
+    $('#assessment-form').on('submit', function (e) {
+        e.preventDefault();
+
+        const data = {
+            riskId: parseInt($('#form-risk-id').val()),
+            usernameId: "@usernameId.ToString()",
+            assessmentDate: new Date().toISOString().split('T')[0],
+            impactScore: parseInt($('#impactScore').val()),
+            probabilityScore: parseInt($('#probabilityScore').val()),
+            notes: $('#notes').val()
+        };
+        console.log(data);
+
+        const url = isEditMode
+            ? 'https://localhost:7248/Risk/EditAssessment'
+            : 'https://localhost:7248/Risk/AddAssessments';
+
+        const method = isEditMode ? 'PUT' : 'POST';
+
+        $.ajax({
+            url,
+            type: method,
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function () {
+                Swal.fire('Успех', isEditMode ? 'Оценка обновлена.' : 'Оценка добавлена.', 'success');
+                $('#back-button').click();
+                const departmentId = $('#departmentDropdown').val();
+                isEditMode = false;
+                setTimeout(() => loadRisks(departmentId), 300); // немного подождать перед обновлением
+            },
+            error: function () {
+                Swal.fire('Ошибка', 'Не удалось сохранить оценку.', 'error');
+            }
+        });
+    });
+</script>
+}

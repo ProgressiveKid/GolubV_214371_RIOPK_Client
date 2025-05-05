@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\DirecotrPages\" />
+    <Folder Include="Pages\DirectorPages\" />
     <Folder Include="Pages\AdministratorPages\" />
   </ItemGroup>
 
@@ -24,6 +24,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CorporateRiskManagementSystemBack\CorporateRiskManagementSystemBack\CorporateRiskManagementSystemBack.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Pages\AuditorPages\RiskAssessmentPage.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

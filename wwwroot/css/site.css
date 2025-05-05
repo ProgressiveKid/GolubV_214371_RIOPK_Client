@@ -20,3 +20,43 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* Стили для tooltip */
+.assessment-cell {
+    position: relative;
+    cursor: pointer;
+}
+
+.assessment-cell::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: -5px;
+    left: 105%;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 8px;
+    border-radius: 5px;
+    font-size: 14px;
+    white-space: pre-wrap;
+    display: none;
+    max-width: 300px;
+    z-index: 10;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.assessment-cell:hover::after {
+    display: block;
+    opacity: 1;
+}
+
+/* Стрелочка для tooltip */
+.assessment-cell::after {
+    border-width: 5px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+    top: 50%;
+    left: 105%;
+    transform: translateY(-50%);
+}

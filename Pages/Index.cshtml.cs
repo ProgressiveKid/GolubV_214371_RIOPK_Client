@@ -15,7 +15,6 @@ public class IndexModel : PageModel
 
     public IActionResult OnGet()
     {
-        var cookieValue = Request.Cookies["CRMSAuth"];
         if (!User.Identity.IsAuthenticated)
         {
             return RedirectToPage("/AuthPages/Autorisation");
