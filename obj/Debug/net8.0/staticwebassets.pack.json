@@ -17,116 +17,32 @@
       "PackagePath": "staticwebassets\\images\\Landing\\head.jpeg"
     },
     {
-      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\Rooms\\1\\1.jpeg",
-      "PackagePath": "staticwebassets\\images\\Rooms\\1\\1.jpeg"
+      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\icon\\audit.png",
+      "PackagePath": "staticwebassets\\images\\icon\\audit.png"
     },
     {
-      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\Rooms\\1\\2.jpeg",
-      "PackagePath": "staticwebassets\\images\\Rooms\\1\\2.jpeg"
+      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\icon\\auditor\\likehood.png",
+      "PackagePath": "staticwebassets\\images\\icon\\auditor\\likehood.png"
     },
     {
-      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\Rooms\\1\\3.jpeg",
-      "PackagePath": "staticwebassets\\images\\Rooms\\1\\3.jpeg"
+      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\icon\\auditor\\severity.png",
+      "PackagePath": "staticwebassets\\images\\icon\\auditor\\severity.png"
     },
     {
-      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\Rooms\\1\\4.jpeg",
-      "PackagePath": "staticwebassets\\images\\Rooms\\1\\4.jpeg"
-    },
-    {
-      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\Rooms\\2\\1.jpeg",
-      "PackagePath": "staticwebassets\\images\\Rooms\\2\\1.jpeg"
-    },
-    {
-      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\Rooms\\2\\2.jpeg",
-      "PackagePath": "staticwebassets\\images\\Rooms\\2\\2.jpeg"
-    },
-    {
-      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\Rooms\\2\\3.jpeg",
-      "PackagePath": "staticwebassets\\images\\Rooms\\2\\3.jpeg"
-    },
-    {
-      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\Rooms\\2\\4.jpeg",
-      "PackagePath": "staticwebassets\\images\\Rooms\\2\\4.jpeg"
-    },
-    {
-      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\Rooms\\3\\1.jpeg",
-      "PackagePath": "staticwebassets\\images\\Rooms\\3\\1.jpeg"
-    },
-    {
-      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\Rooms\\3\\2.jpeg",
-      "PackagePath": "staticwebassets\\images\\Rooms\\3\\2.jpeg"
-    },
-    {
-      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\Rooms\\3\\3.jpeg",
-      "PackagePath": "staticwebassets\\images\\Rooms\\3\\3.jpeg"
-    },
-    {
-      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\Rooms\\3\\4.jpeg",
-      "PackagePath": "staticwebassets\\images\\Rooms\\3\\4.jpeg"
-    },
-    {
-      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\Rooms\\3\\5.jpeg",
-      "PackagePath": "staticwebassets\\images\\Rooms\\3\\5.jpeg"
-    },
-    {
-      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\Rooms\\3\\6.jpeg",
-      "PackagePath": "staticwebassets\\images\\Rooms\\3\\6.jpeg"
-    },
-    {
-      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\Rooms\\3\\7.jpeg",
-      "PackagePath": "staticwebassets\\images\\Rooms\\3\\7.jpeg"
-    },
-    {
-      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\Rooms\\3\\8.jpeg",
-      "PackagePath": "staticwebassets\\images\\Rooms\\3\\8.jpeg"
-    },
-    {
-      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\Rooms\\4\\1.jpeg",
-      "PackagePath": "staticwebassets\\images\\Rooms\\4\\1.jpeg"
-    },
-    {
-      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\Rooms\\4\\2.jpeg",
-      "PackagePath": "staticwebassets\\images\\Rooms\\4\\2.jpeg"
-    },
-    {
-      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\Rooms\\4\\3.jpeg",
-      "PackagePath": "staticwebassets\\images\\Rooms\\4\\3.jpeg"
-    },
-    {
-      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\Rooms\\5\\1.jpeg",
-      "PackagePath": "staticwebassets\\images\\Rooms\\5\\1.jpeg"
-    },
-    {
-      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\Rooms\\6\\1.jpeg",
-      "PackagePath": "staticwebassets\\images\\Rooms\\6\\1.jpeg"
-    },
-    {
-      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\Rooms\\6\\2.jpeg",
-      "PackagePath": "staticwebassets\\images\\Rooms\\6\\2.jpeg"
-    },
-    {
-      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\Rooms\\6\\3.jpeg",
-      "PackagePath": "staticwebassets\\images\\Rooms\\6\\3.jpeg"
-    },
-    {
-      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\Rooms\\7\\1.jpeg",
-      "PackagePath": "staticwebassets\\images\\Rooms\\7\\1.jpeg"
-    },
-    {
-      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\icon\\android-chrome-192x192.png",
-      "PackagePath": "staticwebassets\\images\\icon\\android-chrome-192x192.png"
-    },
-    {
-      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\icon\\android-chrome-512x512.png",
-      "PackagePath": "staticwebassets\\images\\icon\\android-chrome-512x512.png"
-    },
-    {
-      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\icon\\apple-touch-icon.png",
-      "PackagePath": "staticwebassets\\images\\icon\\apple-touch-icon.png"
+      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\icon\\autorisation_page\\autorisationPage.png",
+      "PackagePath": "staticwebassets\\images\\icon\\autorisation_page\\autorisationPage.png"
     },
     {
       "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\icon\\browserconfig.xml",
       "PackagePath": "staticwebassets\\images\\icon\\browserconfig.xml"
+    },
+    {
+      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\icon\\create_risk.png",
+      "PackagePath": "staticwebassets\\images\\icon\\create_risk.png"
+    },
+    {
+      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\icon\\document.png",
+      "PackagePath": "staticwebassets\\images\\icon\\document.png"
     },
     {
       "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\icon\\favicon-16x16.png",
@@ -141,8 +57,24 @@
       "PackagePath": "staticwebassets\\images\\icon\\favicon.ico"
     },
     {
+      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\icon\\grade_risk.png",
+      "PackagePath": "staticwebassets\\images\\icon\\grade_risk.png"
+    },
+    {
       "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\icon\\mstile-150x150.png",
       "PackagePath": "staticwebassets\\images\\icon\\mstile-150x150.png"
+    },
+    {
+      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\icon\\roles\\admin_icon.png",
+      "PackagePath": "staticwebassets\\images\\icon\\roles\\admin_icon.png"
+    },
+    {
+      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\icon\\roles\\auditor_icon.png",
+      "PackagePath": "staticwebassets\\images\\icon\\roles\\auditor_icon.png"
+    },
+    {
+      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\icon\\roles\\director_icon.png",
+      "PackagePath": "staticwebassets\\images\\icon\\roles\\director_icon.png"
     },
     {
       "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\icon\\safari-pinned-tab.svg",

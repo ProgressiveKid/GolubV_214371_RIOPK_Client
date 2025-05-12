@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using CorporateRiskManagementSystemBack.Data;
 using CorporateRiskManagementSystemBack.Domain.Entites;
 using CorporateRiskManagementSystemBack.Domain.Entites.Enums;
 using CorporateRiskManagementSystemBack.ViewModels;
@@ -7,10 +6,11 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CorporateRiskManagementSystemBack.Controllers;
+using CorporateRiskManagementSystemBack.API.Controllers;
 using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json;
+using CorporateRiskManagementSystemBack.Infrastructure.Data;
 
 namespace CorporateRiskManagementSystem.Frontend.Pages.Controllers
 {
@@ -42,7 +42,7 @@ namespace CorporateRiskManagementSystem.Frontend.Pages.Controllers
         [HttpGet("RedirectToLoginView")]
         public IActionResult RedirectToLoginView()
         {
-            return Redirect("https://localhost:7100/Auth/Login"); // Razor View во фронте
+            return Redirect("https://localhost:7100/AuthPages/Autorisation"); // Razor View во фронте
         }
 
         [HttpPost("Autorisation")]
@@ -137,6 +137,16 @@ namespace CorporateRiskManagementSystem.Frontend.Pages.Controllers
                 IsPersistent = true,
                 ExpiresUtc = DateTimeOffset.UtcNow.AddYears(1)
             });
+        }
+
+        [HttpPost("Logout")]
+        [ValidateAntiForgeryToken]
+        public IActionResult Logout()
+        {
+            // Вызываем SignOut для всех схем аутентификации, чтобы выйти из всех сессий
+            HttpContext.SignOutAsync();
+            // Редирект на страницу входа (или другую страницу)
+            return RedirectToLoginView();
         }
     }
 }

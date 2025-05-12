@@ -1,0 +1,8 @@
+﻿@page
+@model CorporateRiskManagementSystem.Frontend.Pages.AuditorPages.UserOfficeModel
+@{
+}
+<form method="post" asp-controller="Auth" asp-action="Logout" asp-area="" id="logoutForm">
+    @Html.AntiForgeryToken()
+    <button class="btn btn-success btn-login btn-block" type="submit">Выйти из учётной записи</button>
+</form>

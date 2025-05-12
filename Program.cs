@@ -1,4 +1,4 @@
-using CorporateRiskManagementSystemBack.Data;
+using CorporateRiskManagementSystemBack.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
@@ -43,7 +43,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseRouting();
-
+app.UseStaticFiles();
 app.MapRazorPages();
 app.MapControllers();
 app.Run();
