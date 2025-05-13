@@ -18,6 +18,10 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\vgolub\source\repos\CorporateRiskManagementSystem.Frontend
 build_property._RazorSourceGeneratorDebug = 
 
+[C:/Users/vgolub/source/repos/CorporateRiskManagementSystem.Frontend/Pages/AdminPages/AdminPage.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5QYWdlc1xBZG1pblBhZ2UuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/vgolub/source/repos/CorporateRiskManagementSystem.Frontend/Pages/AuditorPages/ReportPage.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXVkaXRvclBhZ2VzXFJlcG9ydFBhZ2UuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 

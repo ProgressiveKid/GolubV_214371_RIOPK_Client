@@ -55,7 +55,18 @@ namespace CorporateRiskManagementSystem.Frontend.Pages.Controllers
                 {
                     Role curRole = Enum.Parse<Role>(user.Role);
                     await Authenticate(model.Email, curRole);
-                    return Json(new { success = true, redirectUrl = "https://localhost:7100" });
+                    if (curRole == Role.Auditor)
+                    {
+                        return Json(new { success = true, redirectUrl = "https://localhost:7100" });
+                    }
+                    if (curRole == Role.Manager)
+                    {
+                        return Json(new { success = true, redirectUrl = "https://localhost:7100" });
+                    }
+                    if (curRole == Role.Administrator)
+                    {
+                        return Json(new { success = true, redirectUrl = "https://localhost:7100/AdminPages/AdminPage" });
+                    }
                 }
                 else
                 {

@@ -1,0 +1,146 @@
+﻿@page
+@model CorporateRiskManagementSystem.Frontend.Pages.AuditorPages.ReportPage
+@{
+    ViewData["Title"] = "Страница админа";
+    string usernameId = ViewData["username"] as string;
+
+}
+<h2>Страница админа</h2>
+<h2>Выберите пользователя</h2>
+
+<select id="userComboBox" class="form-select">
+    <option selected disabled>Загрузка...</option>
+</select>
+<div class="mb-3">
+    <label for="roleComboBox" class="form-label">Новая роль:</label>
+    <select id="roleComboBox" class="form-select">
+        <option value="Auditor">Аудитор</option>
+        <option value="Administrator">Администратор</option>
+        <option value="Manager">Директор</option>
+    </select>
+</div>
+
+<button id="updateRoleBtn" class="btn btn-primary">Изменить роль</button>
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function () {
+            const comboBox = $('#userComboBox');
+            comboBox.empty();
+
+            $.ajax({
+                url: 'https://localhost:7248/Admin/GetUserName',
+                type: 'GET',
+                success: function (users) {
+                    users.forEach(function (user) {
+                        comboBox.append($('<option>', {
+                            value: user,
+                            text: user
+                        }));
+                    });
+                },
+                error: function (xhr, status, error) {
+                    comboBox.append($('<option>', {
+                        text: 'Ошибка загрузки данных'
+                    }));
+                    Swal.fire('Ошибка', 'Ошибка при получении пользователей: ' + error, 'error');
+                    console.error('Ошибка при получении пользователей:', xhr.responseText);
+                }
+            });
+        });
+
+      let selectedUserId = null;
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            const comboBox = document.getElementById('userComboBox');
+            comboBox.innerHTML = '';
+
+            try {
+                const response = await fetch('https://localhost:7248/Admin/GetUserName');
+                const users = await response.json();
+
+                users.forEach(userLine => {
+                    const option = document.createElement('option');
+                    option.textContent = userLine;
+                    option.value = userLine;
+                    comboBox.appendChild(option);
+                });
+            } catch (error) {
+                const errorOption = document.createElement('option');
+                errorOption.textContent = 'Ошибка загрузки данных';
+                comboBox.appendChild(errorOption);
+            }
+        });
+
+        document.getElementById('userComboBox').addEventListener('change', async (e) => {
+            const selectedLine = e.target.value;
+            const email = selectedLine.trim().split(' ').at(-1); // последний элемент — email
+
+            try {
+                const res = await fetch(`https://localhost:7248/Admin/GetUserIdByEmail?email=${encodeURIComponent(email)}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    selectedUserId = data.userId;
+                } else {
+                    selectedUserId = null;
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Ошибка',
+                        text: 'Не удалось получить ID пользователя',
+                    });
+                }
+            } catch (e) {
+                selectedUserId = null;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Сетевая ошибка',
+                    text: 'Ошибка при получении ID',
+                });
+            }
+        });
+
+        document.getElementById('updateRoleBtn').addEventListener('click', async () => {
+            const role = document.getElementById('roleComboBox').value;
+
+            if (!selectedUserId) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Внимание',
+                    text: 'Пользователь не выбран',
+                });
+                return;
+            }
+
+            try {
+                const response = await fetch('https://localhost:7248/Admin/ChangeUserRole', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: selectedUserId, newRole: role })
+                });
+
+                if (response.ok) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Готово',
+                        text: 'Роль успешно обновлена',
+                    });
+                } else {
+                    const msg = await response.text();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Ошибка',
+                        text: msg,
+                    });
+                }
+            } catch (e) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Ошибка',
+                    text: 'Ошибка при запросе на изменение роли',
+                });
+            }
+        });
+    </script>
+}
+

@@ -6,38 +6,41 @@
     string username = ViewData["username"] as string;
 }
 
-<form id="createRiskForm">
-    <div class="mb-3">
-        <label for="title" class="form-label">Название</label>
-        <input type="text" id="title" class="form-control" required />
-    </div>
+@if (@User.IsInRole("Auditor"))
+{
+    <form id="createRiskForm">
+        <div class="mb-3">
+            <label for="title" class="form-label">Название</label>
+            <input type="text" id="title" class="form-control" required />
+        </div>
 
-    <div class="mb-3">
-        <label for="description" class="form-label">Описание риска</label>
-        <textarea id="description" class="form-control" required></textarea>
-    </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Описание риска</label>
+            <textarea id="description" class="form-control" required></textarea>
+        </div>
 
-    <div class="mb-3">
-        <label for="severity" class="form-label">Серьезность</label>
-        <img src="~/images/icon/auditor/severity.png" alt="audit icon" width="24" height="24" class="ms-2" />
-        <select id="severity" class="form-select" required>
-            <option value="Low">Низкий</option>
-            <option value="Medium">Средний</option>
-            <option value="High">Высокий</option>
-        </select>
-    </div>
+        <div class="mb-3">
+            <label for="severity" class="form-label">Серьезность</label>
+            <img src="~/images/icon/auditor/severity.png" alt="audit icon" width="24" height="24" class="ms-2" />
+            <select id="severity" class="form-select" required>
+                <option value="Low">Низкий</option>
+                <option value="Medium">Средний</option>
+                <option value="High">Высокий</option>
+            </select>
+        </div>
 
-    <div class="mb-3">
-        <label for="likelihood" title="Вероятность описывает степень вероятности наступления данного риска в рамках определённого периода времени или условий" class="form-label">Вероятность</label>
-        <img src="~/images/icon/auditor/likehood.png" alt="audit icon" width="24" height="24" class="ms-2" />
-        <select id="likelihood" class="form-select" required>
-            <option title="Риск маловероятен и вряд ли случится в обозримом будущем. Возможно, только в случае некоторых нестандартных или уникальных обстоятельств." value="Low">Низкий</option>
-            <option title="Риск может случиться, но в ограниченном объёме или при определённых условиях. Требуется внимание и мониторинг, но не является критичным на данный момент" value="Medium">Средний</option>
-            <option title="Риск имеет значительную вероятность проявления в ближайшем будущем и требует немедленного внимания. Это риски, которые могут существенно повлиять на работу организации" value="High">Высокий</option>
-        </select>
-    </div>
-    <button type="submit" class="btn btn-primary">Создать риск</button>
-</form>
+        <div class="mb-3">
+            <label for="likelihood" title="Вероятность описывает степень вероятности наступления данного риска в рамках определённого периода времени или условий" class="form-label">Вероятность</label>
+            <img src="~/images/icon/auditor/likehood.png" alt="audit icon" width="24" height="24" class="ms-2" />
+            <select id="likelihood" class="form-select" required>
+                <option title="Риск маловероятен и вряд ли случится в обозримом будущем. Возможно, только в случае некоторых нестандартных или уникальных обстоятельств." value="Low">Низкий</option>
+                <option title="Риск может случиться, но в ограниченном объёме или при определённых условиях. Требуется внимание и мониторинг, но не является критичным на данный момент" value="Medium">Средний</option>
+                <option title="Риск имеет значительную вероятность проявления в ближайшем будущем и требует немедленного внимания. Это риски, которые могут существенно повлиять на работу организации" value="High">Высокий</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Создать риск</button>
+    </form>
+}
 
 
 @section Scripts {
