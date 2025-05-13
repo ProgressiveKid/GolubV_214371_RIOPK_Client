@@ -5,6 +5,8 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Регистрация</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
     <style>
         .btn-registration {
@@ -96,8 +98,6 @@
                 }
             });
 
-            if (!valid) return;
-
                 const data = {
                     Email: document.getElementById('Email').value,
                     Password: document.getElementById('Password').value,
@@ -115,31 +115,33 @@
                     },
                     body: JSON.stringify(data)
                 })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("Ошибка на сервере: " + response.status);
-                    }
-                    return response.json();
-                })
-                .then(result => {
-                    // Убедимся, что мы получили ожидаемый объект с полем message
-                    if (result && result.success === false) {
-                        const msg = document.getElementById('responseMessage');
-                        msg.className = "text-danger";
-                        msg.innerText = result.message || "Неизвестная ошибка";
+                .then(async response => {
+                    const content = await response.json();
+
+                    if (response.ok && content.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Успех',
+                            text: 'Регистрация прошла успешно!'
+                        }).then(() => {
+                            window.location.href = content.redirectUrl;
+                        });
                     } else {
-                        // Успешная регистрация
-                        const msg = document.getElementById('responseMessage');
-                        msg.className = "text-success";
-                        msg.innerText = "Регистрация прошла успешно!";
-                       
+                        // Обработка ошибок валидации/бизнес-логики
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Ошибка регистрации',
+                            text: content.message || 'Ошибка ввода данных'
+                        });
                     }
                 })
                 .catch(error => {
-                    console.error(error);
-                    const msg = document.getElementById('responseMessage');
-                    msg.className = "text-danger";
-                    msg.innerText = "Произошла ошибка. Попробуйте снова.";
+                    // Обработка сетевых ошибок
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Сетевая ошибка',
+                        text: error.message || 'Ошибка подключения к серверу'
+                    });
                 });
         });
     </script>

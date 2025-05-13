@@ -86,6 +86,15 @@ namespace CorporateRiskManagementSystem.Frontend.Pages.Controllers
         [HttpPost("Registration")]
         public async Task<IActionResult> Registration([FromBody] RegisterViewModel userData)
         {
+            if (!userData.Email.Contains("@"))
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Отсутствует домен почты"
+                });
+            }
+
             if (ModelState.IsValid)
             {
                 var user = await db.Users.FirstOrDefaultAsync(u => u.Email == userData.Email);
