@@ -52,27 +52,6 @@
 
       let selectedUserId = null;
 
-        window.addEventListener('DOMContentLoaded', async () => {
-            const comboBox = document.getElementById('userComboBox');
-            comboBox.innerHTML = '';
-
-            try {
-                const response = await fetch('https://localhost:7248/Admin/GetUserName');
-                const users = await response.json();
-
-                users.forEach(userLine => {
-                    const option = document.createElement('option');
-                    option.textContent = userLine;
-                    option.value = userLine;
-                    comboBox.appendChild(option);
-                });
-            } catch (error) {
-                const errorOption = document.createElement('option');
-                errorOption.textContent = 'Ошибка загрузки данных';
-                comboBox.appendChild(errorOption);
-            }
-        });
-
         document.getElementById('userComboBox').addEventListener('change', async (e) => {
             const selectedLine = e.target.value;
             const email = selectedLine.trim().split(' ').at(-1); // последний элемент — email
