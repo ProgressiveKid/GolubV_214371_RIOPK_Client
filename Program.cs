@@ -14,7 +14,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowLocalhost", policy =>
     {
-        policy.AllowAnyOrigin()
+        policy.WithOrigins("https://localhost:7123")
+              .AllowAnyOrigin()
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials(); // Для разрешения передачи куки

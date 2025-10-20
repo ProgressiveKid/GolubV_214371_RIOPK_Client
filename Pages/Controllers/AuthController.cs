@@ -6,10 +6,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CorporateRiskManagementSystemBack.API.Controllers;
-using System.Net.Http;
-using System.Text;
-using Newtonsoft.Json;
 using CorporateRiskManagementSystemBack.Infrastructure.Data;
 
 namespace CorporateRiskManagementSystem.Frontend.Pages.Controllers
@@ -19,11 +15,9 @@ namespace CorporateRiskManagementSystem.Frontend.Pages.Controllers
     public class AuthController : Controller
     {
         RiskDbContext db;
-        private readonly HttpClient _httpClient;
-        public AuthController(RiskDbContext context, HttpClient httpClient)
+        public AuthController(RiskDbContext context)
         {
             db = context;
-            _httpClient = httpClient;
         }
 
         [HttpGet("Autorisation")]
@@ -105,8 +99,8 @@ namespace CorporateRiskManagementSystem.Frontend.Pages.Controllers
                         Email = userData.Email,
                         PasswordHash = userData.Password,
                         Role = Role.Auditor.ToString(),
-                        FullName = userData.FirstName,
-                        Username = userData.LastName,
+                        FullName = userData.LastName + " " + userData.FirstName + " " + userData.Surname,
+                        Username = userData.Email,
                     });
 
                     await db.SaveChangesAsync();

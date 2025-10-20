@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "ouQGKTJOfJFr4NjGOF3r5YTIaUWEHx0eE8fiv+62jdo=",
+  "Hash": "q+K7lSVaMqV8rGWKszidroEIy7f8U8G6waW0MSuUh1I=",
   "Source": "CorporateRiskManagementSystem.Frontend",
   "BasePath": "_content/CorporateRiskManagementSystem.Frontend",
   "Mode": "Default",
@@ -103,6 +103,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
+    },
+    {
+      "Identity": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\emptyReportIMage.jpg",
+      "SourceId": "CorporateRiskManagementSystem.Frontend",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\",
+      "BasePath": "_content/CorporateRiskManagementSystem.Frontend",
+      "RelativePath": "images/emptyReportIMage.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\emptyReportIMage.jpg"
     },
     {
       "Identity": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\icon\\audit.png",

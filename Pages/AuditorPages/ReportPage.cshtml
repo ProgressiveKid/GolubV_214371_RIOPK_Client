@@ -86,11 +86,8 @@
                     }),
                     success: function (response) {
                         const fileBlob = new Blob([response], { type: 'application/pdf' });
-                        const link = document.createElement('a');
-                        link.href = URL.createObjectURL(fileBlob);
-                        link.download = 'report.pdf';  // Название файла
-                        link.click();
-                        Swal.fire('Успех', response.message, 'success');
+                        
+                        Swal.fire('Успех', response, 'success');
                     },
                     error: function (xhr) {
                         Swal.fire('Ошибка', xhr.responseText || 'Ошибка при создании отчета.', 'error');

@@ -82,17 +82,22 @@
                         </div>
                     </div>
                 }
-                @if (User.IsInRole("Director"))
+                @if (User.IsInRole("Manager"))
                 {
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                         <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Index">Просмотреть отчеты Аудитора</a>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/ManagerPages/ManagerPage">Просмотреть отчеты Аудитора</a>
                             </li>
-                            <li class="nav-item">
+@*                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Уволить отдел/сотрудника</a>
-                            </li>
+                            </li> *@
                         </ul>
+                        <div class="form-group">
+                            <a class="nav-link text-black" asp-area="" asp-page="/AuditorPages/UserOffice">
+                                <img src="/images/icon/roles/auditor_icon.png" width="48" height="48" class="ms-2" alt="Пользователь">
+                            </a>
+                        </div>
                     </div>
                 }
             </div>
@@ -167,6 +172,7 @@
             $('#departmentDropdown').change(function () {
                 var selectedValue = $(this).val();
                 localStorage.setItem('selectedDepartment', selectedValue);  // Сохраняем ID выбранного отдела
+                location.reload()
             });
         });
     </script>

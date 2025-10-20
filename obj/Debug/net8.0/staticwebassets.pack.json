@@ -17,6 +17,10 @@
       "PackagePath": "staticwebassets\\images\\Landing\\head.jpeg"
     },
     {
+      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\emptyReportIMage.jpg",
+      "PackagePath": "staticwebassets\\images\\emptyReportIMage.jpg"
+    },
+    {
       "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\icon\\audit.png",
       "PackagePath": "staticwebassets\\images\\icon\\audit.png"
     },

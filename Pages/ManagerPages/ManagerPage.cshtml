@@ -1,0 +1,297 @@
+﻿@page
+@{
+    ViewData["Title"] = "Отчеты отделов";
+}
+
+<h2>Отчеты отделов</h2>
+
+<div class="container mt-4">
+    <!-- Выбор отдела -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <label for="departmentDropdown" class="form-label">Выберите отдел:</label>
+            <select id="departmentDropdown" class="form-select">
+                <option selected disabled>Загрузка отделов...</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Таблица отчетов -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Аудиторские отчеты отдела</h5>
+        </div>
+        <div class="card-body">
+            <div id="loadingSpinner" class="text-center d-none">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Загрузка...</span>
+                </div>
+                <p class="mt-2">Загрузка отчетов...</p>
+            </div>
+
+            <div id="reportsTableContainer" class="d-none">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID отчета</th>
+                                <th>Название</th>
+                                <th>Дата создания</th>
+                                <th>Автор</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportsTableBody">
+                            <!-- Данные будут загружаться здесь -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Блок для отображения когда отчетов нет -->
+            <div id="noReportsMessage" class="text-center d-none">
+                <h4 class="text-muted mb-3">Отчеты не найдены</h4>
+
+@*                 <div class="mb-4">
+                    <img src="~/images/emptyReportIMage.jpg"
+                         alt="Нет отчетов"
+                         width="300"
+                         height="300"
+                         class="img-fluid opacity-75">
+                </div> *@
+                <p class="text-muted mb-4">Для выбранного отдела пока нет созданных аудиторских отчетов.</p>
+                <div class="alert alert-info">
+                    <small>
+                        <i class="fas fa-info-circle"></i>
+                        Аудиторы могут создавать отчеты после оценки всех рисков отдела.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function () {
+            const departmentDropdown = $('#departmentDropdown');
+            const reportsTableBody = $('#reportsTableBody');
+            const reportsTableContainer = $('#reportsTableContainer');
+            const loadingSpinner = $('#loadingSpinner');
+            const noReportsMessage = $('#noReportsMessage');
+
+            // Загрузка списка отделов
+            loadDepartments();
+
+            // Обработчик изменения выбора отдела
+            departmentDropdown.change(function () {
+                const departmentId = $(this).val();
+                if (departmentId) {
+                    localStorage.setItem('selectedDepartment', departmentId);
+                    loadReportsForDepartment(departmentId);
+                }
+            });
+
+            // Загрузка отделов
+            function loadDepartments() {
+                $.ajax({
+                    url: 'https://localhost:7248/Department/OnGetDepartmentsAsync',
+                    type: 'GET',
+                    success: function (data) {
+                        departmentDropdown.empty();
+
+                        if (data.length > 0) {
+                            $.each(data, function (index, department) {
+                                departmentDropdown.append(
+                                    $('<option>', {
+                                        value: department.departmentId,
+                                        text: department.name
+                                    })
+                                );
+                            });
+
+                            // Восстанавливаем выбранный отдел из localStorage
+                            const savedDepartment = localStorage.getItem('selectedDepartment');
+                            if (savedDepartment) {
+                                departmentDropdown.val(savedDepartment);
+                                loadReportsForDepartment(savedDepartment);
+                            } else {
+                                // Выбираем первый отдел по умолчанию
+                                const firstDepartmentId = data[0].departmentId;
+                                departmentDropdown.val(firstDepartmentId);
+                                localStorage.setItem('selectedDepartment', firstDepartmentId);
+                                loadReportsForDepartment(firstDepartmentId);
+                            }
+                        } else {
+                            departmentDropdown.append('<option>Нет отделов</option>');
+                        }
+                    },
+                    error: function () {
+                        departmentDropdown.empty();
+                        departmentDropdown.append('<option>Ошибка загрузки отделов</option>');
+                        Swal.fire('Ошибка', 'Не удалось загрузить список отделов', 'error');
+                    }
+                });
+            }
+
+            // Функция удаления отчета с подтверждением
+            function deleteReport(reportId) {
+                Swal.fire({
+                    title: 'Удалить отчет?',
+                    text: "Вы уверены, что хотите удалить этот отчет? Это действие нельзя отменить!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Да, удалить!',
+                    cancelButtonText: 'Отмена',
+                    reverseButtons: true,
+                    customClass: {
+                        confirmButton: 'btn btn-danger',
+                        cancelButton: 'btn btn-secondary'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Показываем индикатор загрузки
+                        Swal.fire({
+                            title: 'Удаление...',
+                            text: 'Пожалуйста, подождите',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+
+                        // Выполняем запрос на удаление
+                        $.ajax({
+                            url: `https://localhost:7248/Report/DeleteReport/${reportId}`,
+                            type: 'POST',
+                            success: function (response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Удалено!',
+                                    text: 'Отчет успешно удален',
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                }).then(() => {
+                                    // Перезагружаем таблицу отчетов
+                                    const departmentId = $('#departmentDropdown').val();
+                                    loadReportsForDepartment(departmentId);
+                                });
+                            },
+                            error: function (xhr) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Ошибка!',
+                                    text: xhr.responseJSON?.message || 'Не удалось удалить отчет',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+
+            // Загрузка отчетов для отдела
+            function loadReportsForDepartment(departmentId) {
+                loadingSpinner.removeClass('d-none');
+                reportsTableContainer.addClass('d-none');
+                noReportsMessage.addClass('d-none');
+                reportsTableBody.empty();
+
+                $.ajax({
+                    url: `https://localhost:7248/Report/GetReports/${departmentId}`,
+                    type: 'GET',
+                    success: function (reports) {
+                        loadingSpinner.addClass('d-none');
+
+                        if (reports && reports.length > 0) {
+                            reportsTableContainer.removeClass('d-none');
+                            noReportsMessage.addClass('d-none');
+
+                            reports.forEach(function (report) {
+                                const row = `
+                                            <tr>
+                                                <td>${report.reportId}</td>
+                                                <td>${report.title || 'Без названия'}</td>
+                                                <td>${new Date(report.createdAt).toLocaleDateString('ru-RU')}</td>
+                                                <td>${report.author ? report.author.fullName : 'Неизвестен'}</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-primary me-1 view-report"
+                                                            data-report-id="${report.reportId}">
+                                                        Просмотреть
+                                                    </button>
+                                                    <button class="btn btn-sm btn-outline-success download-report"
+                                                            data-report-id="${report.reportId}">
+                                                        Скачать
+                                                    </button>
+                                                                <button class="btn btn-sm btn-outline-danger delete-report"
+                                                            data-report-id="${report.reportId}">
+                                                        🗑️ Удалить
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        `;
+                                reportsTableBody.append(row);
+                            });
+
+                            // Добавляем обработчики для кнопок
+                            $('.view-report').click(function () {
+                                const reportId = $(this).data('report-id');
+                                viewReport(reportId);
+                            });
+
+                            $('.download-report').click(function () {
+                                const reportId = $(this).data('report-id');
+                                downloadReport(reportId);
+                            });
+
+                            $('.delete-report').click(function () {
+                                const reportId = $(this).data('report-id');
+                                deleteReport(reportId);
+                            });
+                        } else {
+                            reportsTableContainer.addClass('d-none');
+                            noReportsMessage.removeClass('d-none');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        loadingSpinner.addClass('d-none');
+                        Swal.fire('Ошибка', 'Не удалось загрузить отчеты для отдела', 'error');
+                        console.error('Ошибка при загрузке отчетов:', error);
+                    }
+                });
+            }
+
+            // Просмотр отчета
+            function viewReport(reportId) {
+                window.open(`https://localhost:7248/Report/ViewReport/${reportId}`, '_blank');
+            }
+
+            // Скачивание отчета
+            function downloadReport(reportId) {
+                const link = document.createElement('a');
+                link.href = `https://localhost:7248/Report/DownloadReport/${reportId}`;
+                link.download = `report_${reportId}.pdf`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+
+            // Восстановление выбранного отдела при загрузке страницы
+            const savedDepartment = localStorage.getItem('selectedDepartment');
+            if (savedDepartment) {
+                // Уже обрабатывается в loadDepartments
+            } else {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Выберите отдел',
+                    text: 'Пожалуйста, выберите отдел для просмотра отчетов.',
+                    confirmButtonText: 'ОК'
+                });
+            }
+        });
+    </script>
+}
