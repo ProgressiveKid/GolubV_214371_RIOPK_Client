@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "q+K7lSVaMqV8rGWKszidroEIy7f8U8G6waW0MSuUh1I=",
+  "Hash": "oZTrV593e/vfPaA29gpFY4YZltI9cvEwijEV0qrpFGg=",
   "Source": "CorporateRiskManagementSystem.Frontend",
   "BasePath": "_content/CorporateRiskManagementSystem.Frontend",
   "Mode": "Default",
@@ -483,6 +483,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\Landing\\head.jpeg"
+    },
+    {
+      "Identity": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\logo.png",
+      "SourceId": "CorporateRiskManagementSystem.Frontend",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\",
+      "BasePath": "_content/CorporateRiskManagementSystem.Frontend",
+      "RelativePath": "images/logo.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\logo.png"
     },
     {
       "Identity": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\nextButton.png",

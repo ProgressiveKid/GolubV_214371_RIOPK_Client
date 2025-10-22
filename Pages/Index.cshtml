@@ -46,28 +46,7 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            // Загружаем список департаментов при загрузке страницы
-            $.ajax({
-                url: 'https://localhost:7248/Department/OnGetDepartmentsAsync',  // Путь к методу контроллера
-                type: 'GET',
-                success: function (data) {
-                    $('#departmentDropdown').empty();  // Очистка старых данных
-                    if (data.length > 0) {
-                        // Добавляем департаменты в выпадающий список
-                        $.each(data, function (index, department) {
-                            $('#departmentDropdown').append(
-                                `<option value="${department.departmentId}">${department.name}</option>`
-                            );
-                        });
-                    } else {
-                        $('#departmentDropdown').append('<option>Нет отделов</option>');
-                    }
-                },
-                error: function () {
-                    $('#departmentDropdown').empty();
-                    $('#departmentDropdown').append('<option>Ошибка загрузки</option>');
-                }
-            });
+
 
             // Обработчик отправки формы
             $("#createRiskForm").on("submit", function (event) {

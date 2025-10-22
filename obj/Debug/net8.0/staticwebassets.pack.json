@@ -93,6 +93,10 @@
       "PackagePath": "staticwebassets\\images\\icon\\user.png"
     },
     {
+      "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\logo.png",
+      "PackagePath": "staticwebassets\\images\\logo.png"
+    },
+    {
       "Id": "C:\\Users\\vgolub\\source\\repos\\CorporateRiskManagementSystem.Frontend\\wwwroot\\images\\nextButton.png",
       "PackagePath": "staticwebassets\\images\\nextButton.png"
     },

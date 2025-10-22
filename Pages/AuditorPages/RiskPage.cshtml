@@ -31,31 +31,15 @@
     <script>
         $(document).ready(function () {
             // Загрузка департаментов
-            $.ajax({
-                url: 'https://localhost:7248/Department/OnGetDepartmentsAsync',
-                type: 'GET',
-                success: function (data) {
-                    const dropdown = $('#departmentDropdown');
-                    dropdown.empty();
 
-                    if (!data || data.length === 0) {
-                        dropdown.append('<option>Нет отделов</option>');
-                        return;
-                    }
 
-                    $.each(data, function (index, department) {
-                        dropdown.append(`<option value="${department.departmentId}">${department.name}</option>`);
-                    });
+            const departmentId = localStorage.getItem('selectedDepartment');
 
-                    // Выбираем первый отдел и запускаем запрос на риски
-                    const firstDepartmentId = data[0].departmentId;
-                    dropdown.val(firstDepartmentId);
-                    loadRisks(firstDepartmentId);
-                },
-                error: function () {
-                    Swal.fire('Ошибка', 'Не удалось загрузить департаменты.', 'error');
-                }
-            });
+            if (!departmentId) {
+                Swal.fire('Ошибка', 'Не выбран отдел.', 'error');
+                return;
+            }
+            loadRisks(departmentId)
 
             // Слушатель на изменение выбора департамента
             $('#departmentDropdown').on('change', function () {

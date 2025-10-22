@@ -57,33 +57,14 @@
     let isEditMode = false;
 
     $(document).ready(function () {
-        function loadDepartments() {
-            $.ajax({
-                url: 'https://localhost:7248/Department/OnGetDepartmentsAsync',
-                type: 'GET',
-                success: function (data) {
-                    const dropdown = $('#departmentDropdown');
-                    dropdown.empty();
 
-                    if (!data || data.length === 0) {
-                        dropdown.append('<option>Нет отделов</option>');
-                        return;
-                    }
+            const departmentId1 = localStorage.getItem('selectedDepartment');
 
-                    $.each(data, function (index, department) {
-                        dropdown.append(`<option value="${department.departmentId}">${department.name}</option>`);
-                    });
-
-                    const firstDepartmentId = data[0].departmentId;
-                    dropdown.val(firstDepartmentId);
-                    loadRisks(firstDepartmentId);
-                },
-                error: function () {
-                    Swal.fire('Ошибка', 'Не удалось загрузить департаменты.', 'error');
-                }
-            });
-        }
-
+            if (!departmentId1) {
+                Swal.fire('Ошибка', 'Не выбран отдел.', 'error');
+                return;
+            }
+            loadRisks(departmentId1);
         $('#departmentDropdown').on('change', function () {
             const departmentId = $(this).val();
             if (!departmentId) {
