@@ -13,6 +13,7 @@
             <th>ID</th>
             <th>Название</th>
             <th>Описание</th>
+            <th>Тип риска</th> <!-- НОВАЯ КОЛОНКА -->
             <th>Уровень серьезности</th>
             <th>Вероятность</th>
             <th>Дата создания</th>
@@ -32,8 +33,6 @@
     <script>
         $(document).ready(function () {
             // Загрузка департаментов
-
-
             const departmentId = localStorage.getItem('selectedDepartment');
 
             if (!departmentId) {
@@ -70,43 +69,72 @@
                 });
             }
 
+            // Функция для преобразования типа риска на русский
+            function getRiskTypeInRussian(riskType) {
+                const riskTypeMap = {
+                    0: 'Операционный',
+                    1: 'Финансовый',
+                    2: 'Юридический',
+                    3: 'Репутационный',
+                    4: 'Кадровый',
+                    5: 'Технологический',
+                    // Также на случай, если приходит строка
+                    'Operational': 'Операционный',
+                    'Financial': 'Финансовый',
+                    'Legal': 'Юридический',
+                    'Reputational': 'Репутационный',
+                    'HumanResources': 'Кадровый',
+                    'Technological': 'Технологический'
+                };
+                if (typeof riskType === 'number') {
+                    return riskTypeMap[riskType] || 'Неизвестный';
+                }
+
+                // Если это строка
+                return riskTypeMap[riskType] || riskType || '—';
+            }
+
             function renderRiskTable(data) {
                 const tbody = $('#risks-table-body');
                 tbody.empty();
 
                 if (!data || data.length === 0) {
-                    tbody.append('<tr><td colspan="8" class="text-center">Нет рисков для отображения.</td></tr>');
-                    return;
+                    tbody.append('<tr><td colspan="9" class="text-center">Нет рисков для отображения.</td></tr>');
+                            return;
                 }
 
                 data.forEach(risk => {
                     const departments = risk.departments?.map(d => d.name).join(', ') || '—';
 
-                      // Если оценка есть — собрать tooltip текст
-                        let assessmentInfo = 'Оценка отсутствует';
-                        if (risk.isHaveAssessment && risk.riskAssessments) {
-                            const { impactScore, probabilityScore, notes } = risk.riskAssessments[0];
-                            assessmentInfo = `Влияние: ${impactScore}\nВероятность: ${probabilityScore}\nЗаметки: ${notes ?? '—'}`;
-                        }
+                    // Если оценка есть — собрать tooltip текст
+                    let assessmentInfo = 'Оценка отсутствует';
+                    if (risk.isHaveAssessment && risk.riskAssessments) {
+                        const { impactScore, probabilityScore, notes } = risk.riskAssessments[0];
+                        assessmentInfo = `Влияние: ${impactScore}\nВероятность: ${probabilityScore}\nЗаметки: ${notes ?? '—'}`;
+                    }
+
+                    // Получаем тип риска на русском
+                    const riskTypeRussian = getRiskTypeInRussian(risk.riskType);
 
                     const row = `
-                    <tr>
-                        <td>${risk.riskId}</td>
-                        <td>${risk.title}</td>
-                        <td>${risk.description ?? '—'}</td>
-                        <td>${risk.severity}</td>
-                        <td>${risk.likelihood}</td>
-                        <td>${new Date(risk.createdAt).toLocaleDateString()}</td>
-                        <td title="${assessmentInfo}">${risk.isHaveAssessment ? '✔' : '—'}</td>
-                        <td>
-                            <button class="btn btn-danger btn-sm delete-risk-btn"
-                                    data-risk-id="${risk.riskId}"
-                                    data-risk-title="${risk.title}">
-                                Удалить
-                            </button>
-                        </td>
-                    </tr>
-                `;
+                            <tr id="risk-row-${risk.riskId}">
+                                <td>${risk.riskId}</td>
+                                <td>${risk.title}</td>
+                                <td>${risk.description ?? '—'}</td>
+                                <td>${riskTypeRussian}</td>
+                                <td>${risk.severity}</td>
+                                <td>${risk.likelihood}</td>
+                                <td>${new Date(risk.createdAt).toLocaleDateString()}</td>
+                                <td title="${assessmentInfo}">${risk.isHaveAssessment ? '✔' : '—'}</td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm delete-risk-btn"
+                                            data-risk-id="${risk.riskId}"
+                                            data-risk-title="${risk.title}">
+                                        Удалить
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
                     tbody.append(row);
                 });
 
@@ -154,7 +182,7 @@
 
                                 // Проверяем, остались ли риски
                                 if ($('#risks-table-body tr').length === 0) {
-                                    $('#risks-table-body').append('<tr><td colspan="8" class="text-center">Нет рисков для отображения.</td></tr>');
+                                    $('#risks-table-body').append('<tr><td colspan="9" class="text-center">Нет рисков для отображения.</td></tr>');
                                 }
 
                                 Swal.fire({
@@ -163,8 +191,9 @@
                                     icon: 'success',
                                     confirmButtonText: 'OK'
                                 }).then(() => {
+                                    // Перезагружаем страницу для обновления данных
                                     location.reload();
-                                });;
+                                });
                             },
                             error: function (xhr, status, error) {
                                 Swal.close();

@@ -5,7 +5,47 @@
     ViewData["Title"] = "CRMS";
     string username = ViewData["username"] as string;
 }
+<style>
+    .risk-type-selector {
+        margin-bottom: 1rem;
+    }
 
+    .risk-type-option {
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .risk-type-card {
+        border: 2px solid #dee2e6;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+    }
+
+        .risk-type-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+    .risk-type-option.selected .risk-type-card {
+        border-color: #0d6efd;
+        background-color: rgba(13, 110, 253, 0.05);
+    }
+
+    .risk-type-icon {
+        width: 60px;
+        height: 60px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background-color: rgba(13, 110, 253, 0.1);
+    }
+
+    .risk-type-option.selected .risk-type-icon {
+        background-color: rgba(13, 110, 253, 0.2);
+    }
+</style>
 @if (@User.IsInRole("Auditor"))
 {
     <form id="createRiskForm">
@@ -17,6 +57,96 @@
         <div class="mb-3">
             <label for="description" class="form-label">Описание риска</label>
             <textarea id="description" class="form-control" required></textarea>
+        </div>
+
+        <!-- Тип риска с красивым отображением -->
+        <div class="mb-3">
+            <label for="riskType" class="form-label">Тип риска</label>
+            <div class="risk-type-selector">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="risk-type-option" data-type="Operational">
+                            <div class="card risk-type-card h-100">
+                                <div class="card-body text-center">
+                                    <div class="risk-type-icon mb-2">
+                                        <i class="bi bi-gear-fill text-primary fs-3"></i>
+                                    </div>
+                                    <h6 class="card-title">Операционный</h6>
+                                    <p class="card-text small text-muted">Сбои в работе оборудования, проблемы с поставками, ошибки в управлении запасами</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="risk-type-option" data-type="Financial">
+                            <div class="card risk-type-card h-100">
+                                <div class="card-body text-center">
+                                    <div class="risk-type-icon mb-2">
+                                        <i class="bi bi-cash-coin text-success fs-3"></i>
+                                    </div>
+                                    <h6 class="card-title">Финансовый</h6>
+                                    <p class="card-text small text-muted">Проблемы с ликвидностью, нехватка финансирования, ошибки в управлении кредитным портфелем</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="risk-type-option" data-type="Legal">
+                            <div class="card risk-type-card h-100">
+                                <div class="card-body text-center">
+                                    <div class="risk-type-icon mb-2">
+                                        <i class="bi bi-scale-balanced text-warning fs-3"></i>
+                                    </div>
+                                    <h6 class="card-title">Юридический</h6>
+                                    <p class="card-text small text-muted">Судебные иски, нарушения законодательства, нарушение авторских прав</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="risk-type-option" data-type="Reputational">
+                            <div class="card risk-type-card h-100">
+                                <div class="card-body text-center">
+                                    <div class="risk-type-icon mb-2">
+                                        <i class="bi bi-star-fill text-info fs-3"></i>
+                                    </div>
+                                    <h6 class="card-title">Репутационный</h6>
+                                    <p class="card-text small text-muted">Ущерб деловой репутации из-за действий сотрудников или внешних событий</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="risk-type-option" data-type="HumanResources">
+                            <div class="card risk-type-card h-100">
+                                <div class="card-body text-center">
+                                    <div class="risk-type-icon mb-2">
+                                        <i class="bi bi-people-fill text-danger fs-3"></i>
+                                    </div>
+                                    <h6 class="card-title">Кадровый</h6>
+                                    <p class="card-text small text-muted">Некомпетентность сотрудников, недобросовестность, мошенничество</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="risk-type-option" data-type="Technological">
+                            <div class="card risk-type-card h-100">
+                                <div class="card-body text-center">
+                                    <div class="risk-type-icon mb-2">
+                                        <i class="bi bi-cpu-fill text-secondary fs-3"></i>
+                                    </div>
+                                    <h6 class="card-title">Технологический</h6>
+                                    <p class="card-text small text-muted">Технические сбои, устаревание технологий, проблемы с безопасностью данных</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Скрытый input для хранения выбранного значения -->
+                <input type="hidden" id="riskType" name="riskType" value="Operational" required />
+            </div>
+            <div class="form-text">Выберите тип риска, кликнув на соответствующую карточку</div>
         </div>
 
         <div class="mb-3">
@@ -38,16 +168,44 @@
                 <option title="Риск имеет значительную вероятность проявления в ближайшем будущем и требует немедленного внимания. Это риски, которые могут существенно повлиять на работу организации" value="High">Высокий</option>
             </select>
         </div>
+
         <button type="submit" class="btn btn-primary">Создать риск</button>
     </form>
 }
 
-
 @section Scripts {
+    <!-- Подключаем Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
     <script>
         $(document).ready(function () {
+            // Загрузка департаментов при загрузке страницы
+            const departmentId = localStorage.getItem('selectedDepartment');
 
+            if (!departmentId) {
+                Swal.fire('Ошибка', 'Не выбран отдел.', 'error');
+                return;
+            }
 
+            // Обработчик выбора типа риска
+            $('.risk-type-option').on('click', function () {
+                // Убираем класс selected у всех карточек
+                $('.risk-type-option').removeClass('selected');
+
+                // Добавляем класс selected к выбранной карточке
+                $(this).addClass('selected');
+
+                // Устанавливаем значение в скрытом input
+                const riskType = $(this).data('type');
+                $('#riskType').val(riskType);
+
+                console.log('Выбран тип риска:', riskType);
+            });
+
+            // Выбираем первый тип риска по умолчанию
+            $('.risk-type-option').first().addClass('selected');
+
+ 
             // Обработчик отправки формы
             $("#createRiskForm").on("submit", function (event) {
                 event.preventDefault();
@@ -55,41 +213,57 @@
                 const data = {
                     title: $("#title").val(),
                     description: $("#description").val(),
+                    riskType: $("#riskType").val(), // Добавляем тип риска
                     severity: $("#severity").val(),
                     likelihood: $("#likelihood").val(),
-                    departmentId: $("#departmentDropdown").val(),  // Получаем выбранный ID департамента
+                    departmentId: $("#departmentDropdown").val(),
                     usernameId: "@ViewData["username"].ToString()"
                 };
-                console.log(data);
-                // Отправка данных на сервер с использованием fetch
+
+                console.log('Данные для отправки:', data);
+
+                // Проверяем, что выбран департамент
+                if (!data.departmentId) {
+                    Swal.fire('Внимание', 'Пожалуйста, выберите департамент', 'warning');
+                    return;
+                }
+
+                // Отправка данных на сервер
                 fetch('https://localhost:7248/Risk/CreateRisk', {
                     method: 'POST',
-                    credentials: 'include', // для использования с куки
+                    credentials: 'include',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(data)
                 })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Ошибка при создании риска');
-                    }
-                    return response.json();
-                })
-                .then(data => {
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(err => { throw new Error(err.message || 'Ошибка при создании риска'); });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
                         Swal.fire({
                             title: 'Готово!',
                             text: 'Риск успешно создан',
                             icon: 'success',
                             confirmButtonText: 'ОК'
                         }).then(() => {
-                            location.reload(); // перезагрузка страницы после закрытия alert 
+                            // Сбрасываем форму
+                            $("#createRiskForm")[0].reset();
+                            // Сбрасываем выбор типа риска
+                            $('.risk-type-option').removeClass('selected');
+                            $('.risk-type-option').first().addClass('selected');
+                            $('#riskType').val('Operational');
+                            // Перезагрузка страницы
+                            location.reload();
                         });
-                   
-                })
-                .catch(error => {
-                    console.error('Ошибка:', error);
-                });
+                    })
+                    .catch(error => {
+                        console.error('Ошибка:', error);
+                        Swal.fire('Ошибка', error.message || 'Не удалось создать риск', 'error');
+                    });
             });
         });
     </script>
