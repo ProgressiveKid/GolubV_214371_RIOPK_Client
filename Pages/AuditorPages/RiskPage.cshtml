@@ -17,6 +17,7 @@
             <th>Вероятность</th>
             <th>Дата создания</th>
             <th>Есть ли оценка риска</th>
+            <th>Действия</th>
         </tr>
     </thead>
     <tbody id="risks-table-body">
@@ -97,13 +98,87 @@
                         <td>${risk.likelihood}</td>
                         <td>${new Date(risk.createdAt).toLocaleDateString()}</td>
                         <td title="${assessmentInfo}">${risk.isHaveAssessment ? '✔' : '—'}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm delete-risk-btn"
+                                    data-risk-id="${risk.riskId}"
+                                    data-risk-title="${risk.title}">
+                                Удалить
+                            </button>
+                        </td>
                     </tr>
                 `;
                     tbody.append(row);
                 });
+
+                // Добавляем обработчики событий для кнопок удаления
+                $('.delete-risk-btn').on('click', function () {
+                    const riskId = $(this).data('risk-id');
+                    const riskTitle = $(this).data('risk-title');
+                    deleteRisk(riskId, riskTitle);
+                });
             }
 
+            // Функция удаления риска
+            function deleteRisk(riskId, riskTitle) {
+                Swal.fire({
+                    title: 'Вы уверены?',
+                    text: `Вы действительно хотите удалить риск "${riskTitle}"? Это действие нельзя отменить.`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Да, удалить',
+                    cancelButtonText: 'Отмена',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Показываем индикатор загрузки
+                        Swal.fire({
+                            title: 'Удаление...',
+                            text: 'Пожалуйста, подождите',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                        console.log("Отправляю DELETE запрос на:", `https://localhost:7248/Risk/DeleteRisk?riskId=${riskId}`);
+                        // Отправляем запрос на удаление
+                        $.ajax({
+                            url: `https://localhost:7248/Risk/DeleteRisk?riskId=${riskId}`,
+                            type: 'DELETE',
+                            success: function (response) {
+                                Swal.close();
 
+                                // Удаляем строку из таблицы
+                                $(`#risk-row-${riskId}`).remove();
+
+                                // Проверяем, остались ли риски
+                                if ($('#risks-table-body tr').length === 0) {
+                                    $('#risks-table-body').append('<tr><td colspan="8" class="text-center">Нет рисков для отображения.</td></tr>');
+                                }
+
+                                Swal.fire({
+                                    title: 'Успешно!',
+                                    text: 'Риск был успешно удален.',
+                                    icon: 'success',
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    location.reload();
+                                });;
+                            },
+                            error: function (xhr, status, error) {
+                                Swal.close();
+                                Swal.fire({
+                                    title: 'Ошибка!',
+                                    text: 'Не удалось удалить риск: ' + (xhr.responseJSON?.message || error),
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        });
+                    }
+                });
+            }
         });
     </script>
 }
