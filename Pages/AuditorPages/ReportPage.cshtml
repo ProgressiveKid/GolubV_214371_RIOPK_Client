@@ -86,8 +86,16 @@
                     }),
                     success: function (response) {
                         const fileBlob = new Blob([response], { type: 'application/pdf' });
-                        
-                        Swal.fire('Успех', response, 'success');
+
+                        const link = document.createElement('a');
+
+                        link.href = `https://localhost:7248/Report/DownloadReport/${response.reportId}`;
+                        link.download = `report_${response.reportId}.pdf`;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        Swal.fire('Успех', 'Отчёт сфорирован', 'success');
+
                     },
                     error: function (xhr) {
                         Swal.fire('Ошибка', xhr.responseText || 'Ошибка при создании отчета.', 'error');
