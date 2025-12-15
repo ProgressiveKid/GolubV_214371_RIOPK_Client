@@ -1,0 +1,664 @@
+﻿@page
+@model CorporateRiskManagementSystem.Frontend.Pages.ManagerPages.ManagerRiskPage
+@{
+    ViewData["Title"] = "Риски отделов";
+}
+@{
+    var userId = ViewData["UserId"] as string;
+}
+<script>
+    const userId = '@userId';
+</script>
+<h2>Риски отделов</h2>
+    <style>
+        .status-badge {
+            font-size: 0.8em;
+            padding: 4px 8px;
+            border-radius: 12px;
+        }
+
+        .status-new {
+            background-color: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .status-inprogress {
+            background-color: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .status-review {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .status-approved {
+            background-color: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .status-completed {
+            background-color: #e8f5e8;
+            color: #1b5e20;
+        }
+
+        .status-rejected {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        .status-cancelled {
+            background-color: #f5f5f5;
+            color: #616161;
+        }
+
+        .risk-severity-high {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+
+        .risk-severity-medium {
+            color: #f57c00;
+            font-weight: bold;
+        }
+
+        .risk-severity-low {
+            color: #388e3c;
+            font-weight: bold;
+        }
+
+        .cursor-pointer {
+            cursor: pointer;
+        }
+    </style>
+<div class="container mt-4">
+    <!-- Выбор отдела -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <label for="departmentDropdown" class="form-label">Выберите отдел:</label>
+            <select id="departmentDropdown" class="form-select">
+                <option selected disabled>Загрузка отделов...</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="statusFilter" class="form-label">Фильтр по статусу:</label>
+            <select id="statusFilter" class="form-select">
+                <option value="">Все статусы</option>
+                <option value="Оценка отстутствует">Оценка отстутствует</option>
+                <option value="Оценка произведена">Оценка произведена</option>
+                <option value="Завершен">Завершен</option>
+                <option value="Отменен">Отменен</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Таблица рисков -->
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">Риски отдела</h5>
+            <div class="btn-group">
+                <button id="refreshBtn" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-sync-alt"></i> Обновить
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div id="loadingSpinner" class="text-center d-none">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Загрузка...</span>
+                </div>
+                <p class="mt-2">Загрузка рисков...</p>
+            </div>
+
+            <div id="risksTableContainer" class="d-none">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Название</th>
+                                <th>Описание</th>
+                                <th>Тип риска</th>
+                                <th>Серьезность</th>
+                                <th>Вероятность</th>
+                                <th>Статус</th>
+                                <th>Дата изменения статуса</th>
+                                <th>Оценка</th>
+                                <th>Создан</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="risksTableBody">
+                            <!-- Данные будут загружаться здесь -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Пагинация или информация -->
+                <div class="mt-3 text-end">
+                    <small class="text-muted" id="riskCount">Загружено рисков: 0</small>
+                </div>
+            </div>
+
+            <!-- Блок для отображения когда рисков нет -->
+            <div id="noRisksMessage" class="text-center d-none">
+                <h4 class="text-muted mb-3">Риски не найдены</h4>
+                <p class="text-muted mb-4">Для выбранного отдела пока нет созданных рисков.</p>
+                <div class="alert alert-info">
+                    <small>
+                        <i class="fas fa-info-circle"></i>
+                        Аудиторы могут создавать риски для оценки в своих отделах.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для изменения статуса -->
+    <div class="modal fade" id="statusModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Изменение статуса риска</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="currentRiskId">
+                    <div class="mb-3">
+                        <label for="newStatus" class="form-label">Новый статус:</label>
+                        <select id="newStatus" class="form-select">
+                            <option value="Завершен">Завершен</option>
+                            <option value="Отменен">Отменен</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="statusComment" class="form-label">Комментарий:</label>
+                        <textarea id="statusComment" class="form-control" rows="3"
+                                  placeholder="Опишите причину изменения статуса..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-primary" id="saveStatusBtn">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function () {
+            const departmentDropdown = $('#departmentDropdown');
+            const statusFilter = $('#statusFilter');
+            const risksTableBody = $('#risksTableBody');
+            const risksTableContainer = $('#risksTableContainer');
+            const loadingSpinner = $('#loadingSpinner');
+            const noRisksMessage = $('#noRisksMessage');
+            const riskCount = $('#riskCount');
+            const refreshBtn = $('#refreshBtn');
+
+            let currentDepartmentId = null;
+            let allRisks = [];
+
+            // Загрузка списка отделов
+            loadDepartments();
+
+            // Обработчик изменения выбора отдела
+            departmentDropdown.change(function () {
+                currentDepartmentId = $(this).val();
+                if (currentDepartmentId) {
+                    localStorage.setItem('selectedDepartmentManager', currentDepartmentId);
+                    loadRisksForDepartment(currentDepartmentId);
+                }
+            });
+
+            // Обработчик фильтра по статусу
+            statusFilter.change(function () {
+                filterRisksByStatus($(this).val());
+            });
+
+            // Кнопка обновления
+            refreshBtn.click(function () {
+                if (currentDepartmentId) {
+                    loadRisksForDepartment(currentDepartmentId);
+                }
+            });
+
+            // Загрузка отделов
+            function loadDepartments() {
+                $.ajax({
+                    url: 'https://localhost:7248/Department/OnGetDepartmentsAsync',
+                    type: 'GET',
+                    success: function (data) {
+                        departmentDropdown.empty();
+
+                        if (data.length > 0) {
+                            $.each(data, function (index, department) {
+                                departmentDropdown.append(
+                                    $('<option>', {
+                                        value: department.departmentId,
+                                        text: department.name
+                                    })
+                                );
+                            });
+
+                            // Восстанавливаем выбранный отдел из localStorage
+                            const savedDepartment = localStorage.getItem('selectedDepartmentManager');
+                            if (savedDepartment) {
+                                departmentDropdown.val(savedDepartment);
+                                currentDepartmentId = savedDepartment;
+                                loadRisksForDepartment(savedDepartment);
+                            } else {
+                                // Выбираем первый отдел по умолчанию
+                                const firstDepartmentId = data[0].departmentId;
+                                departmentDropdown.val(firstDepartmentId);
+                                currentDepartmentId = firstDepartmentId;
+                                localStorage.setItem('selectedDepartmentManager', firstDepartmentId);
+                                loadRisksForDepartment(firstDepartmentId);
+                            }
+                        } else {
+                            departmentDropdown.append('<option>Нет отделов</option>');
+                        }
+                    },
+                    error: function () {
+                        departmentDropdown.empty();
+                        departmentDropdown.append('<option>Ошибка загрузки отделов</option>');
+                        Swal.fire('Ошибка', 'Не удалось загрузить список отделов', 'error');
+                    }
+                });
+            }
+
+            // Загрузка рисков для отдела
+            function loadRisksForDepartment(departmentId) {
+                loadingSpinner.removeClass('d-none');
+                risksTableContainer.addClass('d-none');
+                noRisksMessage.addClass('d-none');
+                risksTableBody.empty();
+
+                $.ajax({
+                    url: `https://localhost:7248/Risk/GetRisksWithStatus?departmentId=${departmentId}`,
+                    type: 'GET',
+                    success: function (risks) {
+                        loadingSpinner.addClass('d-none');
+                        allRisks = risks || [];
+
+                        if (allRisks.length > 0) {
+                            filterRisksByStatus(statusFilter.val());
+                        } else {
+                            risksTableContainer.addClass('d-none');
+                            noRisksMessage.removeClass('d-none');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        loadingSpinner.addClass('d-none');
+                        Swal.fire('Ошибка', 'Не удалось загрузить риски для отдела', 'error');
+                        console.error('Ошибка при загрузке рисков:', error);
+                    }
+                });
+            }
+
+            // Фильтрация рисков по статусу
+            function filterRisksByStatus(status) {
+                let filteredRisks = allRisks;
+
+                if (status) {
+                    filteredRisks = allRisks.filter(risk =>
+                        risk.currentStatus?.statusName === status
+                    );
+                }
+
+                renderRisksTable(filteredRisks);
+            }
+
+            // Функция для получения класса статуса
+            function getStatusClass(statusName) {
+                const statusClasses = {
+                    'Завершен': 'status-completed',
+                    'Оценка отстутствует': 'status-started',
+                    'Оценка произведена': 'status-completed',
+                    'Отклонен': 'status-rejected',
+                };
+                return statusClasses[statusName] || 'status-new';
+            }
+
+            // Функция для преобразования типа риска на русский
+            function getRiskTypeInRussian(riskType) {
+                const riskTypeMap = {
+                    0: 'Операционный',
+                    1: 'Финансовый',
+                    2: 'Юридический',
+                    3: 'Репутационный',
+                    4: 'Кадровый',
+                    5: 'Технологический',
+                    'Operational': 'Операционный',
+                    'Financial': 'Финансовый',
+                    'Legal': 'Юридический',
+                    'Reputational': 'Репутационный',
+                    'HumanResources': 'Кадровый',
+                    'Technological': 'Технологический'
+                };
+
+                if (typeof riskType === 'number') {
+                    return riskTypeMap[riskType] || 'Неизвестный';
+                }
+                return riskTypeMap[riskType] || riskType || '—';
+            }
+
+            // Функция для получения класса серьезности
+            function getSeverityClass(severity) {
+                const severityLower = severity?.toLowerCase() || '';
+                if (severityLower.includes('высок')) return 'risk-severity-high';
+                if (severityLower.includes('средн')) return 'risk-severity-medium';
+                if (severityLower.includes('низк')) return 'risk-severity-low';
+                return '';
+            }
+
+            // Рендеринг таблицы рисков
+            function renderRisksTable(risks) {
+                risksTableBody.empty();
+
+                if (risks.length === 0) {
+                    risksTableContainer.addClass('d-none');
+                    noRisksMessage.removeClass('d-none');
+                    riskCount.text('Загружено рисков: 0');
+                    return;
+                }
+
+                risksTableContainer.removeClass('d-none');
+                noRisksMessage.addClass('d-none');
+
+                risks.forEach(function (risk) {
+                    const riskTypeRussian = getRiskTypeInRussian(risk.riskType);
+                    const severityClass = getSeverityClass(risk.severity);
+                    const likelihoodClass = getSeverityClass(risk.likelihood);
+
+                    const currentStatus = risk.currentStatus;
+                    const statusClass = currentStatus ? getStatusClass(currentStatus.statusName) : 'status-new';
+
+                    // Информация об оценке
+                    let assessmentInfo = 'Оценка отсутствует';
+                    let assessmentIcon = '—';
+
+                    if (risk.isHaveAssessment && risk.riskAssessments && risk.riskAssessments.length > 0) {
+                        const assessment = risk.riskAssessments[0];
+                        assessmentInfo = `Влияние: ${assessment.impactScore}, Вероятность: ${assessment.probabilityScore}`;
+                        assessmentIcon = '📊';
+                    }
+
+                    // Форматирование дат
+                    const createdAt = new Date(risk.createdAt).toLocaleDateString('ru-RU');
+                    const statusChangedAt = currentStatus
+                        ? new Date(currentStatus.changedAt).toLocaleDateString('ru-RU')
+                        : '—';
+
+                    const row = `
+                                <tr>
+                                    <td class="align-middle">${risk.riskId}</td>
+                                    <td class="align-middle">
+                                        <strong>${risk.title}</strong>
+                                    </td>
+                                    <td class="align-middle">
+                                        ${risk.description ?
+                                                `<span class="description-text">${risk.description.substring(0, 100)}${risk.description.length > 100 ? '...' : ''}</span>`
+                                                : '<span class="text-muted fst-italic">Нет описания</span>'
+                                            }
+                                    </td>
+                                    <td>${riskTypeRussian}</td>
+                                    <td class="${severityClass}">${risk.severity || '—'}</td>
+                                    <td class="${likelihoodClass}">${risk.likelihood || '—'}</td>
+                                    <td>
+                                        ${currentStatus
+                                        ? `<span class="status-badge ${statusClass}">${currentStatus.statusName}</span>
+                                                           ${currentStatus.statusDescription ? `<br><small class="text-muted">${currentStatus.statusDescription}</small>` : ''}`
+                            : '<span class="status-badge status-new">Оценка отсутствует</span>'}
+                                    </td>
+                                    <td>${statusChangedAt}</td>
+                                    <td title="${assessmentInfo}">${assessmentIcon}</td>
+                                    <td>${createdAt}</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <button class="btn btn-outline-primary change-status-btn"
+                                                    data-risk-id="${risk.riskId}"
+                                                    data-risk-title="${risk.title}"
+                                                    title="Изменить статус">
+                                                📝
+                                            </button>
+                                            <button class="btn btn-outline-info view-details-btn"
+                                                    data-risk-id="${risk.riskId}"
+                                                    title="Подробности">
+                                                👁️
+                                            </button>
+                                            ${risk.isHaveAssessment ? `
+                                            <button class="btn btn-outline-success view-assessment-btn"
+                                                    data-risk-id="${risk.riskId}"
+                                                    title="Просмотреть оценку">
+                                                📊
+                                            </button>
+                                            ` : ''}
+                                        </div>
+                                    </td>
+                                </tr>
+                            `;
+
+                    risksTableBody.append(row);
+                });
+
+                riskCount.text(`Загружено рисков: ${risks.length}`);
+
+                // Добавляем обработчики событий
+                addEventHandlers();
+            }
+
+            // Добавление обработчиков событий
+            function addEventHandlers() {
+                // Кнопка изменения статуса
+                $('.change-status-btn').click(function () {
+                    const riskId = $(this).data('risk-id');
+                    const riskTitle = $(this).data('risk-title');
+
+                    $('#currentRiskId').val(riskId);
+
+                    // Находим текущий статус риска
+                    const risk = allRisks.find(r => r.riskId === riskId);
+                    if (risk && risk.currentStatus) {
+                        $('#newStatus').val(risk.currentStatus.statusName);
+                    } else {
+                        $('#newStatus').val('Новый');
+                    }
+
+                    $('#statusComment').val('');
+
+                    // Обновляем заголовок модального окна
+                    $('#statusModal .modal-title').text(`Изменение статуса: "${riskTitle}"`);
+
+                    // Показываем модальное окно
+                    const modal = new bootstrap.Modal(document.getElementById('statusModal'));
+                    modal.show();
+                });
+
+                // Кнопка просмотра деталей
+                $('.view-details-btn').click(function () {
+                    const riskId = $(this).data('risk-id');
+                    viewRiskDetails(riskId);
+                });
+
+                // Кнопка просмотра оценки
+                $('.view-assessment-btn').click(function () {
+                    const riskId = $(this).data('risk-id');
+                    viewRiskAssessment(riskId);
+                });
+            }
+
+            // Сохранение нового статуса
+            $('#saveStatusBtn').click(function () {
+                const riskId = $('#currentRiskId').val();
+                const newStatus = $('#newStatus').val();
+                const comment = $('#statusComment').val();
+
+                if (!riskId) {
+                    Swal.fire('Ошибка', 'Риск не выбран', 'error');
+                    return;
+                }
+
+                // Закрываем модальное окно
+                bootstrap.Modal.getInstance(document.getElementById('statusModal')).hide();
+                // Отправляем запрос на изменение статуса
+                $.ajax({
+                    url: 'https://localhost:7248/Status/ChangeStatus',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        riskId: parseInt(riskId),
+                        newStatus: newStatus,
+                        description: comment,
+                        username: userId,
+                    }),
+                    success: function (response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Статус изменен!',
+                            text: 'Статус риска успешно обновлен',
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            // Обновляем список рисков
+                            if (currentDepartmentId) {
+                                loadRisksForDepartment(currentDepartmentId);
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Ошибка!',
+                            text: xhr.responseJSON?.message || 'Не удалось изменить статус',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            });
+
+            // Просмотр деталей риска
+            function viewRiskDetails(riskId) {
+                const risk = allRisks.find(r => r.riskId === riskId);
+                if (!risk) return;
+
+                const riskTypeRussian = getRiskTypeInRussian(risk.riskType);
+                const createdAt = new Date(risk.createdAt).toLocaleString('ru-RU');
+                const createdBy = risk.createdBy || 'Неизвестно';
+
+                let departmentsList = '—';
+                if (risk.departments && risk.departments.length > 0) {
+                    departmentsList = risk.departments.map(d => d.name).join(', ');
+                }
+
+                let statusHistory = '—';
+                if (risk.statusHistory && risk.statusHistory.length > 0) {
+                    statusHistory = risk.statusHistory.map(s =>
+                        `${s.statusName} (${new Date(s.changedAt).toLocaleDateString('ru-RU')})`
+                    ).join('<br>');
+                }
+
+                Swal.fire({
+                    title: `Риск: ${risk.title}`,
+                    html: `
+                                <div class="text-start">
+                                    <p><strong>Описание:</strong> ${risk.description || '—'}</p>
+                                    <p><strong>Тип риска:</strong> ${riskTypeRussian}</p>
+                                    <p><strong>Серьезность:</strong> ${risk.severity || '—'}</p>
+                                    <p><strong>Вероятность:</strong> ${risk.likelihood || '—'}</p>
+                                    <hr>
+                                    <p><strong>Отделы:</strong> ${departmentsList}</p>
+                                    <p><strong>Создан:</strong> ${createdAt}</p>
+                                    <p><strong>Автор:</strong> ${createdBy}</p>
+                                    <hr>
+                                    <p><strong>История статусов:</strong><br>${statusHistory}</p>
+                                </div>
+                            `,
+                    width: '600px',
+                    confirmButtonText: 'Закрыть',
+                    showCloseButton: true
+                });
+            }
+
+            // Просмотр оценки риска
+            function viewRiskAssessment(riskId) {
+                const risk = allRisks.find(r => r.riskId === riskId);
+                if (!risk || !risk.riskAssessments || risk.riskAssessments.length === 0) {
+                    Swal.fire('Информация', 'Оценка риска не найдена', 'info');
+                    return;
+                }
+
+                const assessment = risk.riskAssessments[0];
+                const assessedAt = new Date(assessment.assessmentDate).toLocaleDateString('ru-RU');
+                const assessedBy = assessment.assessedBy?.fullName || 'Неизвестно';
+
+                // Рассчитываем общую оценку
+                const totalScore = assessment.impactScore * assessment.probabilityScore;
+                let riskLevel = 'Низкий';
+                let riskLevelClass = 'text-success';
+
+                if (totalScore > 15) {
+                    riskLevel = 'Высокий';
+                    riskLevelClass = 'text-danger';
+                } else if (totalScore > 5) {
+                    riskLevel = 'Средний';
+                    riskLevelClass = 'text-warning';
+                }
+
+                Swal.fire({
+                    title: `Оценка риска: ${risk.title}`,
+                    html: `
+                                <div class="text-start">
+                                    <div class="row mb-3">
+                                        <div class="col-6">
+                                            <div class="card">
+                                                <div class="card-body text-center">
+                                                    <h5 class="card-title">${assessment.impactScore}</h5>
+                                                    <p class="card-text"><small>Влияние</small></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="card">
+                                                <div class="card-body text-center">
+                                                    <h5 class="card-title">${assessment.probabilityScore}</h5>
+                                                    <p class="card-text"><small>Вероятность</small></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="alert ${riskLevelClass}">
+                                        <strong>Уровень риска:</strong> ${riskLevel} (${totalScore} баллов)
+                                    </div>
+
+                                    ${assessment.notes ? `
+                                    <div class="mb-3">
+                                        <strong>Заметки:</strong>
+                                        <p class="mt-1">${assessment.notes}</p>
+                                    </div>
+                                    ` : ''}
+
+                                    <hr>
+                                    <p><strong>Дата оценки:</strong> ${assessedAt}</p>
+                                    <p><strong>Оценщик:</strong> ${assessedBy}</p>
+                                </div>
+                            `,
+                    width: '500px',
+                    confirmButtonText: 'Закрыть',
+                    showCloseButton: true
+                });
+            }
+
+            // Восстановление выбранного отдела при загрузке страницы
+            const savedDepartment = localStorage.getItem('selectedDepartmentManager');
+            if (savedDepartment) {
+                // Уже обрабатывается в loadDepartments
+            }
+        });
+    </script>
+}

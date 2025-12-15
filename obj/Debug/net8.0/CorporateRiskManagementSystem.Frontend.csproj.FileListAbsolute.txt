@@ -30,7 +30,6 @@ C:\Users\vgolub\source\repos\CorporateRiskManagementSystem.Frontend\obj\Debug\ne
 C:\Users\vgolub\source\repos\CorporateRiskManagementSystem.Frontend\obj\Debug\net8.0\CorporateRiskManagementSystem.Frontend.genruntimeconfig.cache
 C:\Users\vgolub\source\repos\CorporateRiskManagementSystem.Frontend\obj\Debug\net8.0\ref\CorporateRiskManagementSystem.Frontend.dll
 C:\Users\vgolub\source\repos\CorporateRiskManagementSystem.Frontend\obj\Debug\net8.0\CorporateRiskManagementSystem.Frontend.csproj.AssemblyReference.cache
-C:\Users\vgolub\source\repos\CorporateRiskManagementSystem.Frontend\obj\Debug\net8.0\CorporateRiskManagementSystem.Frontend.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\vgolub\source\repos\CorporateRiskManagementSystem.Frontend\bin\Debug\net8.0\CorporateRiskManagementSystemBack.deps.json
 C:\Users\vgolub\source\repos\CorporateRiskManagementSystem.Frontend\bin\Debug\net8.0\CorporateRiskManagementSystemBack.runtimeconfig.json
 C:\Users\vgolub\source\repos\CorporateRiskManagementSystem.Frontend\bin\Debug\net8.0\CorporateRiskManagementSystemBack.exe
@@ -75,3 +74,4 @@ C:\Users\vgolub\source\repos\CorporateRiskManagementSystem.Frontend\bin\Debug\ne
 C:\Users\vgolub\source\repos\CorporateRiskManagementSystem.Frontend\bin\Debug\net8.0\Microsoft.DotNet.PlatformAbstractions.dll
 C:\Users\vgolub\source\repos\CorporateRiskManagementSystem.Frontend\bin\Debug\net8.0\Microsoft.Extensions.DependencyModel.dll
 C:\Users\vgolub\source\repos\CorporateRiskManagementSystem.Frontend\bin\Debug\net8.0\itext.bouncy-castle-adapter.dll
+C:\Users\vgolub\source\repos\CorporateRiskManagementSystem.Frontend\obj\Debug\net8.0\CorporateRiskManagementSystem.Frontend.MvcApplicationPartsAssemblyInfo.cs

@@ -172,7 +172,168 @@
         <button type="submit" class="btn btn-primary">Создать риск</button>
     </form>
 }
+@if (@User.IsInRole("Manager"))
+{
+         <div class="role-section mb-5">
+         <div class="section-header mb-4">
+             <h3 class="text-dark">
+                 <i class="fas fa-chart-line text-warning me-2"></i>
+                 Руководство для директора/ответственного за устранение потенциальных рисков
+             </h3>
+             <p class="text-muted">Инструменты для мониторинга и контроля рисков</p>
+         </div>
 
+         <div class="row g-4">
+             <div class="col-md-6">
+                 <div class="feature-card h-100">
+                     <div class="feature-icon bg-warning">
+                         <i class="fas fa-eye"></i>
+                     </div>
+                     <h5>Просмотр отчетов</h5>
+                     <p class="text-muted">Анализируйте готовые аудиторские отчеты по отделам. Отслеживайте выполнение планов по снижению рисков.</p>
+                     <a href="/ManagerPages/ManagerPage" class="btn btn-outline-warning btn-sm">
+                         <i class="fas fa-arrow-right me-1"></i> Перейти к отчетам
+                     </a>
+                 </div>
+             </div>
+
+             <div class="col-md-6">
+                 <div class="feature-card h-100">
+                     <div class="feature-icon bg-success">
+                         <i class="fas fa-tasks"></i>
+                     </div>
+                     <h5>Управление рисками</h5>
+                     <p class="text-muted">Контролируйте статусы всех рисков, изменяйте приоритеты, отслеживайте прогресс исправлений.</p>
+                     <a href="/ManagerPages/ManagerRiskPage" class="btn btn-outline-success btn-sm">
+                         <i class="fas fa-arrow-right me-1"></i> Управление рисками
+                     </a>
+                 </div>
+             </div>
+         </div>
+
+         <div class="quick-guide mt-4">
+             <h6 class="text-dark mb-3"><i class="fas fa-lightbulb me-2"></i>Быстрый старт:</h6>
+             <ol class="list-group list-group-numbered">
+                <li class="list-group-item border-0 bg-transparent">
+                    <strong>Перейдите к просмотру отчётов</strong> для отображения списка рисков
+                </li>
+                 <li class="list-group-item border-0 bg-transparent">
+                     <strong>Выберите отдел</strong> для анализа в верхнем меню
+                 </li>
+                 <li class="list-group-item border-0 bg-transparent">
+                    <strong>Просмотрите потенциальные риски подразделении</strong>, выявленных аудиторами по выбранному отделу
+                 </li>
+                 <li class="list-group-item border-0 bg-transparent">
+                     <strong>Измените статусы рисков</strong> на "Завершен" или "Отменен" после исправления
+                 </li>
+             </ol>
+         </div>
+     </div>
+}
+@if (@User.IsInRole("Administrator"))
+{
+     <div class="role-section">
+     <div class="section-header mb-4">
+         <h3 class="text-dark">
+             <i class="fas fa-cogs text-danger me-2"></i>
+             Панель администратора
+         </h3>
+         <p class="text-muted">Управление пользователями и настройка системы</p>
+     </div>
+
+     <div class="row g-4">
+         <div class="col-md-4">
+             <div class="feature-card h-100">
+                 <div class="feature-icon bg-danger">
+                     <i class="fas fa-users-cog"></i>
+                 </div>
+                 <h5>Управление пользователями</h5>
+                 <p class="text-muted">Добавляйте новых сотрудников, изменяйте роли и права доступа. Контролируйте активность пользователей.</p>
+                 <a href="/AdminPages/AdminPage" class="btn btn-outline-danger btn-sm">
+                     <i class="fas fa-arrow-right me-1"></i> Управление пользователями
+                 </a>
+             </div>
+         </div>
+     </div>
+
+     <div class="alert alert-warning mt-4">
+         <h6 class="alert-heading">
+             <i class="fas fa-exclamation-triangle me-2"></i>Важно для администратора:
+         </h6>
+         <ul class="mb-0">
+             <li>Регулярно проверяйте активность пользователей</li>
+             <li>Назначайте роли в соответствии с должностными инструкциями</li>
+             <li>Своевременно деактивируйте учетные записи уволенных сотрудников</li>
+             <li>Резервируйте данные системы еженедельно</li>
+         </ul>
+     </div>
+ </div>
+}
+<style>
+    .system-icon {
+        color: #4361ee;
+        opacity: 0.8;
+    }
+
+    .user-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .role-section {
+        animation: fadeIn 0.5s ease;
+    }
+
+    .section-header {
+        border-bottom: 2px solid #e9ecef;
+        padding-bottom: 1rem;
+    }
+
+    .feature-card {
+        background: #fff;
+        border: 1px solid #e9ecef;
+        border-radius: 10px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border-color: #4361ee;
+        }
+
+    .feature-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+    }
+
+    .quick-guide {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 1.5rem;
+    }
+
+    .list-group-item {
+        padding-left: 0.5rem;
+    }
+
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+    }
+</style>
 @section Scripts {
     <!-- Подключаем Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">

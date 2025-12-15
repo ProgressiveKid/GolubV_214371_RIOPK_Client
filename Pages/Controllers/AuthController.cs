@@ -59,7 +59,7 @@ namespace CorporateRiskManagementSystem.Frontend.Pages.Controllers
                     }
                     if (curRole == Role.Administrator)
                     {
-                        return Json(new { success = true, redirectUrl = "https://localhost:7100/AdminPages/AdminPage" });
+                        return Json(new { success = true, redirectUrl = "https://localhost:7100" });
                     }
                 }
                 else
